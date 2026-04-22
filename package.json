@@ -1,0 +1,51 @@
+{
+  "name": "@delegado/os-delegate",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "AI Agent Operating System - Context engineering + BMAD/OpenSpec workflows",
+  "bin": {
+    "delegado": "./delegado.sh"
+  },
+  "files": [
+    "delegado.sh",
+    "CLAUDE.md",
+    "SKILL.md",
+    "README.md",
+    "SYSTEM.md",
+    "config.yaml",
+    "kernel/",
+    "workflows/",
+    "subagents/",
+    "memory/",
+    "prompts/",
+    "templates/",
+    "modes/",
+    "specs/",
+    "changes/",
+    "templates/"
+  ],
+  "keywords": [
+    "ai-agent",
+    "claude-code",
+    "codex",
+    "cursor",
+    "skill",
+    "context-engineering",
+    "bmad",
+    "workflow",
+    "meta-prompting",
+    "agent-os"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "postinstall": "node scripts/postinstall.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/delegado-os/delegado-os-delegate"
+  },
+  "author": "Delegado OS",
+  "license": "MIT"
+}

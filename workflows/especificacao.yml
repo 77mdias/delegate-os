@@ -1,0 +1,118 @@
+---
+name: especificacao
+description: Workflow spec-driven inspirado no OpenSpec
+version: 1.0.0
+parent: fase.yml
+
+artifacts:
+  - id: proposal
+    generates: proposal.md
+    description: Por que estamos fazendo isso
+    requires: []
+    template: templates/proposal/proposal.md
+
+  - id: specs
+    generates: specs/**/*.md
+    description: Requisitos e cenários
+    requires: [proposal]
+    template: templates/spec/spec.md
+
+  - id: design
+    generates: design.md
+    description: Abordagem técnica
+    requires: [proposal]
+    template: templates/design/design.md
+
+  - id: tasks
+    generates: tasks.md
+    description: Checklist de implementação
+    requires: [specs, design]
+    template: templates/tasks/tasks.md
+
+  - id: implement
+    generates: null
+    description: Execução das tarefas
+    requires: [tasks]
+    tracks: tasks.md
+
+apply:
+  requires: [tasks]
+  tracks: tasks.md
+---
+
+# Workflow: Especificação (OpenSpec-Inspired)
+
+## Fluxo
+
+```
+proposal ──► specs ──► design ──► tasks ──► implement
+    │           │          │          │
+   why        what       how       steps
+ + scope   changes    approach   to take
+```
+
+## Comandos
+
+| Comando | Função |
+|---------|--------|
+| `/propose [nome]` | Criar change proposal |
+| `/specs` | Criar spec |
+| `/design` | Criar design |
+| `/tasks` | Gerar tasks |
+| `/apply` | Aplicar tasks |
+| `/verify` | Verificar implementação |
+| `/archive` | Arquivar change |
+
+## Artifactos
+
+### proposal.md
+```markdown
+# Proposal: [nome]
+
+## Contexto
+[Por que isso é necessário]
+
+## Problema
+[O que estamos resolvendo]
+
+## Impacto
+[O que acontece se não fizermos]
+
+## Escopo
+### Dentro
+- [x] ...
+
+### Fora
+- [ ] ...
+```
+
+### specs/**/*.md
+```markdown
+# Specs: [feature]
+
+## Funcionalidade
+### Cenário 1
+Dado [contexto]
+Quando [ação]
+Então [resultado]
+
+## Critérios de Aceite
+- [ ] ...
+```
+
+### design.md
+```markdown
+# Design: [feature]
+
+## Arquitetura
+[Decisões técnicas]
+
+## Estrutura
+[Files/dirs]
+
+## Integrações
+[APIs, serviços]
+
+## Riscos
+- [x] ...
+```

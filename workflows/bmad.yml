@@ -1,0 +1,74 @@
+---
+name: bmad
+description: Workflow BMad Method - 4 fases
+version: 1.0.0
+parent: fase.yml
+
+phases:
+  - id: 1
+    name: ANALYSIS
+    color: "#FF6B6B"
+    artifacts:
+      - proposal.md
+    optional: true
+
+  - id: 2
+    name: PLANNING
+    color: "#4ECDC4"
+    artifacts:
+      - prd.md
+      - specs.md
+    required: true
+
+  - id: 3
+    name: SOLUTIONING
+    color: "#45B7D1"
+    artifacts:
+      - architecture.md
+      - design.md
+
+  - id: 4
+    name: IMPLEMENTATION
+    color: "#96CEB4"
+    artifacts:
+      - tasks.md
+---
+
+# Workflow: BMad Method
+
+## 4 Fases
+
+| Fase | Nome | Opcional | Artefatos |
+|------|------|----------|-----------|
+| 1 | ANALYSIS | Sim | proposal.md |
+| 2 | PLANNING | Não | PRD, specs |
+| 3 | SOLUTIONING | - | Architecture, design |
+| 4 | IMPLEMENTATION | - | Tasks, código |
+
+## Fase 1: Analysis (Opcional)
+```
+❓ Questionar contexto
+📊 Research
+💡 Brainstorm
+```
+
+## Fase 2: Planning (Required)
+```
+📋 Criar PRD
+🎯 Definir requirements
+📊 Mapear user journeys
+```
+
+## Fase 3: Solutioning
+```
+🏗️ Criar arquitetura
+📐 Design técnico
+📝 ADR decisions
+```
+
+## Fase 4: Implementation
+```
+⚡ Implementar
+🧪 Testar
+✅ Validar
+```

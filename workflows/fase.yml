@@ -1,0 +1,83 @@
+# Workflow — Estrutura de Fases (GSD-Inspired)
+
+```xml
+<fase id="1">
+  <nome>Briefing</nome>
+  <descricao>Entender completamente a tarefa</descricao>
+  <perguntas>
+    <pergunta>O que você quer fazer?</pergunta>
+    <pergunta>Por que você quer fazer isso?</pergunta>
+    <pergunta>O que acontece se não funcionar?</pergunta>
+    <pergunta>Como você sabe que está pronto?</pergunta>
+  </perguntas>
+  <estado>pending</estado>
+</fase>
+
+<fase id="2">
+  <nome>Analise</nome>
+  <descricao>Decompor e analisar</descricao>
+  <tarefas>
+    <tarefa>
+      <nome>Identificar stack</nome>
+      <tipo>atomic</tipo>
+      <estado>pending</estado>
+    </tarefa>
+    <tarefa>
+      <nome>Mapear dependencias</nome>
+      <tipo>atomic</tipo>
+      <estado>pending</estado>
+    </tarefa>
+    <tarefa>
+      <nome>Identificar riscos</nome>
+      <tipo>atomic</tipo>
+      <estado>pending</estado>
+    </tarefa>
+  </tarefas>
+  <estado>pending</estado>
+</fase>
+
+<fase id="3">
+  <nome>Execucao</nome>
+  <descricao>Implementar tarefas atomicas</descricao>
+  <tarefas>
+    <!-- Gerado dinamicamente -->
+  </tarefas>
+  <estado>pending</estado>
+</fase>
+
+<fase id="4">
+  <nome>Validacao</nome>
+  <descricao>Testar e validar</descricao>
+  <checks>
+    <check>Testes passando</check>
+    <check>Coverage OK</check>
+    <check>Code review OK</check>
+    <check>Lint OK</check>
+  </checks>
+  <estado>pending</estado>
+</fase>
+
+<fase id="5">
+  <nome>Entrega</nome>
+  <descricao>Documentar e entregar</descricao>
+  <entregas>
+    <entrega>CHANGELOG atualizado</entrega>
+    <entrega>Documentacao atualizada</entrega>
+    <entrega>Memoria atualizada</entrega>
+  </entregas>
+  <estado>pending</estado>
+</fase>
+```
+
+## Exemplo de Tarefa Atomica
+
+```xml
+<tarefa id="t-001">
+  <nome>Criar endpoint de login</nome>
+  <files>src/app/api/auth/login/route.ts</files>
+  <action>Implementar JWT com jose, validar credenciais</action>
+  <verify>curl -X POST localhost:3000/api/auth/login</verify>
+  <done>Credenciais validas retornam 200 + cookie</done>
+  <estado>pending</estado>
+</tarefa>
+```

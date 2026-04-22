@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<briefing_template>
+  <metadata>
+    <version>1.0</version>
+    <lang>pt-BR</lang>
+    <persona>delegado</persona>
+  </metadata>
+
+  <section name="projeto">
+    <field name="nome" required="true" type="string"/>
+    <field name="stack" required="true" type="array"/>
+    <field name="estrutura" required="true" type="object"/>
+  </section>
+
+  <section name="tarefa">
+    <field name="tipo" required="true" type="enum">
+      <option>feature</option>
+      <option>bugfix</option>
+      <option>refactor</option>
+      <option>docs</option>
+    </field>
+    <field name="descricao" required="true" type="string"/>
+    <field name="escopo" required="true" type="string"/>
+    <field name="complexidade" required="false" type="enum">
+      <option>low</option>
+      <option>medium</option>
+      <option>high</option>
+    </field>
+    <field name="deadline" required="false" type="date"/>
+  </section>
+
+  <section name="criterios">
+    <field name="aceitacao" required="true" type="array"/>
+    <field name="riscos" required="false" type="array"/>
+    <field name="dependencias" required="false" type="array"/>
+  </section>
+
+  <section name="preferencias">
+    <field name="pr_size" required="false" type="number"/>
+    <field name="tdd" required="false" type="boolean"/>
+    <field name="coverage_target" required="false" type="number"/>
+  </section>
+</briefing_template>

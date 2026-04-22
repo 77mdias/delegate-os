@@ -1,0 +1,41 @@
+# Delegado OS - Configuration
+
+schema: spec-driven  # OpenSpec-inspired default
+
+# Workflows disponíveis
+workflows:
+  - id: especificacao
+    name: Especificacao
+    artifact: proposal.md
+    description: Workflow OpenSpec-inspired
+
+  - id: bmad
+    name: BMad Method
+    artifact: prd.md
+    description: 4-phase development method
+
+  - id: fase
+    name: Fase
+    artifact: fase.yml
+    description: GSD-inspired atomic phases
+
+# Directories
+directories:
+  specs: specs/
+  changes: changes/
+  artifacts: artifacts/
+  memory: memory/
+  workflows: workflows/
+
+# Defaults
+defaults:
+  pr_size: medium
+  coverage: 80
+  tdd: true
+
+# BMAD colors
+bmad_colors:
+  analysis: "#FF6B6B"
+  planning: "#4ECDC4"
+  solutioning: "#45B7D1"
+  implementation: "#96CEB4"
