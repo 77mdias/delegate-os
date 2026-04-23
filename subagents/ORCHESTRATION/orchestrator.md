@@ -32,13 +32,61 @@ outputs:
     description: Whether system learned from this interaction
 ---
 
-# Orchestrator Agent
+# Orchestrator Agent v2.0
 
 ## Responsibility
 
-Coordinate all agent operations with learning and adaptation.
+Coordinate all agent operations with learning and adaptation using HELL-CENTRIC approach.
 
-## Core Loop
+## Agent Registry
+
+| Agent | Type | HELL Phase | Specialty |
+|-------|------|-----------|------------|
+| Analyst | specialist | SPEC | Requirements, GRASP domain model |
+| Coder | specialist | TDD | Red/Green/Refactor, GoF |
+| Review | specialist | REFACTOR/REVIEW | GRASP/SOLID audit, patterns |
+| DevOps | specialist | EVOLVE | CI/CD, tech debt |
+| Noir | super-agent | ALL | OpenClaw, orchestration |
+| Hermes | super-agent | ALL | Meta-orchestrator |
+
+## Sub-Agent Spawning
+
+```
+/delegado hell:spec     → Spawn: Analyst Agent
+/delegado hell:tdd     → Spawn: Coder Agent
+/delegado hell:refactor → Spawn: Review Agent
+/delegado hell:evolve  → Spawn: DevOps Agent
+/delegado hell:review   → Spawn: Review Agent
+```
+
+## HELL-Centric Orchestration
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    HELL CYCLE                                │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│  ┌───────┐     ┌───────┐     ┌───────┐     ┌───────┐      │
+│  │ SPEC  │────►│  TDD  │────►│REFACT.│────►│ EVOLVE│─────►│ REVIEW
+│  └───┬───┘     └───┬───┘     └───┬───┘     └───┬───┘      │
+│      │             │             │             │             │
+│      ▼             ▼             ▼             ▼             │
+│  Analyst        Coder          Review       DevOps           │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
+```
+
+## Commands
+
+| Command | Skill Triggered | Agent |
+|---------|-----------------|-------|
+| `/delegado hell:spec` | ANALYST | Analyst |
+| `/delegado hell:tdd` | CODER | Coder |
+| `/delegado hell:refactor` | REVIEW | Review |
+| `/delegado hell:audit` | REVIEW | Review |
+| `/delegado hell:review` | REVIEW | Review |
+| `/delegado hell:evolve` | DEVOPS | DevOps |
+| `/delegado hell:milestone` | ALL | Orchestrator |
 
 ```
 User Input
