@@ -8,12 +8,12 @@
 
 ## Supported Agents
 
-| Agent | Status | Installation |
-|-------|--------|-------------|
-| Claude Code | ✅ | `npm install -g @delegado/os-delegate` |
-| GitHub Codex | ✅ | `npm install -g @delegado/os-delegate` |
-| Cursor | ✅ | `npm install -g @delegado/os-delegate` |
-| Bun | ✅ | `bun install @delegado/os-delegate` |
+| Agent       | Status | Installation                           |
+|-------------|--------|----------------------------------------|
+| Claude Code |   ✅   | `npm install -g @delegado/os-delegate` |
+| Codex       |   ✅   | `npm install -g @delegado/os-delegate` |
+| Cursor      |   ✅   | `npm install -g @delegado/os-delegate` |
+| Bun         |   ✅   | `bun install @delegado/os-delegate`    |
 
 ---
 
