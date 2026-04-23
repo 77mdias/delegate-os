@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Delegado OS - Postinstall Script
- * Auto-links the package to AI agent skills directories
+ * Auto-links the package and individual skills to AI agent skills directories
  */
 
 import { existsSync, symlinkSync, mkdirSync, readdirSync, statSync, rmSync } from 'fs';
@@ -12,27 +12,10 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // Detect supported AI agents and their skills directories
 const AGENTS = {
-  claude: {
-    dir: '.claude/skills',
-    name: 'Claude Code',
-    skillDir: 'delegado-os'
-  },
-  codex: {
-    dir: '.codex/skills',
-    name: 'GitHub Codex',
-    skillDir: 'delegado-os'
-  },
-  cursor: {
-    dir: '.cursor/skills',
-    name: 'Cursor',
-    skillDir: 'delegado-os'
-  }
+  claude: { dir: '.claude/skills', name: 'Claude Code' },
+  codex: { dir: '.codex/skills', name: 'GitHub Codex' },
+  cursor: { dir: '.cursor/skills', name: 'Cursor' }
 };
-
-// Individual skills to link from skills/ directory
-const INDIVIDUAL_SKILLS = [
-  { name: 'dos' }
-];
 
 function getHomeDir() {
   return process.env.HOME || process.env.USERPROFILE || '/tmp';
@@ -44,111 +27,78 @@ function ensureDir(dir) {
   }
 }
 
-function isAlreadyLinked(source, target) {
-  try {
-    if (existsSync(target)) {
+function linkIfNotExists(source, target) {
+  if (existsSync(target)) {
+    try {
       const stats = statSync(target);
       if (stats.isSymbolicLink()) {
         const linkTarget = readlinkSync(target);
-        return linkTarget === source || linkTarget === source.replace(/\/+$/, '');
+        if (linkTarget === source) {
+          return 'already_linked';
+        }
+        rmSync(target);
+      } else {
+        return 'exists_not_symlink';
       }
-      return false;
-    }
-  } catch {
-    return false;
-  }
-  return false;
-}
-
-function linkPackage(agentKey, agent, packagePath) {
-  const homeDir = getHomeDir();
-  const skillsDir = join(homeDir, agent.dir);
-  const targetLink = join(skillsDir, agent.skillDir);
-
-  ensureDir(skillsDir);
-
-  // Check if already linked
-  if (isAlreadyLinked(packagePath, targetLink)) {
-    console.log(`✓ ${agent.name}: Already linked`);
-    return { agent: agent.name, status: 'already_linked', path: targetLink };
-  }
-
-  // Remove existing if not a symlink to our package
-  if (existsSync(targetLink)) {
-    try {
-      rmSync(targetLink, { force: true });
     } catch {
-      console.log(`⚠ ${agent.name}: Could not remove existing path`);
-      return { agent: agent.name, status: 'skipped', path: targetLink };
+      return 'error';
     }
   }
-
   try {
-    symlinkSync(packagePath, targetLink);
-    console.log(`✓ ${agent.name}: Linked to ${targetLink}`);
-    return { agent: agent.name, status: 'linked', path: targetLink };
+    symlinkSync(source, target);
+    return 'linked';
   } catch (err) {
-    console.log(`✗ ${agent.name}: Failed - ${err.message}`);
-    return { agent: agent.name, status: 'error', error: err.message };
-  }
-}
-
-function linkIndividualSkill(skillName, packagePath) {
-  const homeDir = getHomeDir();
-  const skillsDir = join(homeDir, '.claude/skills');
-  const targetLink = join(skillsDir, skillName);
-  const sourcePath = join(packagePath, 'skills', skillName);
-
-  ensureDir(skillsDir);
-
-  if (existsSync(targetLink)) {
-    try {
-      rmSync(targetLink, { force: true });
-    } catch {
-      return { skill: skillName, status: 'skipped' };
-    }
-  }
-
-  try {
-    symlinkSync(sourcePath, targetLink);
-    console.log(`✓ ${skillName}: Linked`);
-    return { skill: skillName, status: 'linked' };
-  } catch (err) {
-    return { skill: skillName, status: 'error', error: err.message };
+    return 'error';
   }
 }
 
 function main() {
   const packagePath = join(__dirname, '..');
+  const skillsBase = join(packagePath, 'skills');
   const homeDir = getHomeDir();
 
   console.log('\n🖥️  Delegado OS - Postinstall\n');
   console.log(`📦 Package: ${packagePath}\n`);
 
-  const results = [];
-  let linked = 0;
-
+  // Link package to each agent's skills dir
+  console.log('📦 Package links:');
   for (const [key, agent] of Object.entries(AGENTS)) {
     const skillsDir = join(homeDir, agent.dir);
     if (existsSync(skillsDir) || process.argv.includes('--force')) {
-      const result = linkPackage(key, agent, packagePath);
-      results.push(result);
-      if (result.status === 'linked') linked++;
-    } else {
-      console.log(`○ ${agent.name}: Not detected (skipped)`);
+      const targetLink = join(skillsDir, 'delegado-os');
+      const result = linkIfNotExists(packagePath, targetLink);
+      const icons = { linked: '✓', already_linked: '✓', exists_not_symlink: '⚠', error: '✗' };
+      const messages = {
+        linked: `Linked to ${targetLink}`,
+        already_linked: 'Already linked',
+        exists_not_symlink: 'Exists (not symlink)',
+        error: 'Failed'
+      };
+      console.log(`${icons[result]} ${agent.name}: ${messages[result]}`);
     }
   }
 
-  console.log('\n📋 Summary');
-  console.log(`   Linked to ${linked} agent(s)\n`);
-
-  // Link individual skills
-  console.log('📦 Individual skills:');
-  for (const skill of INDIVIDUAL_SKILLS) {
-    linkIndividualSkill(skill.name, packagePath);
+  // Link individual skills: skills/dos/[name] -> ~/.claude/skills/dos-[name]
+  console.log('\n📦 Individual skills:');
+  if (existsSync(skillsBase)) {
+    const dosDir = join(skillsBase, 'dos');
+    if (existsSync(dosDir)) {
+      const entries = readdirSync(dosDir);
+      for (const entry of entries) {
+        const entryPath = join(dosDir, entry);
+        const stats = statSync(entryPath);
+        if (stats.isDirectory()) {
+          const targetLink = join(homeDir, '.claude/skills', `dos-${entry}`);
+          const result = linkIfNotExists(entryPath, targetLink);
+          const icons = { linked: '✓', already_linked: '✓', exists_not_symlink: '⚠', error: '✗' };
+          console.log(`${icons[result]} dos-${entry}: Linked`);
+        }
+      }
+    }
   }
 
-  console.log('\n🚀 Skills installed! Type /dos-help for commands.\n');
+  console.log('\n🚀 Skills installed! Commands available:');
+  console.log('   /dos, /dos-bmad, /dos-help, /dos-propose, /dos-specs, etc.\n');
 }
 
 main();
