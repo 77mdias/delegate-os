@@ -18,6 +18,7 @@ Documentação completa do sistema de meta-prompting **Delegado OS**.
 | [hell-method.md](hell-method.md) | Guia completo do HELL Method |
 | [memory-system.md](memory-system.md) | Sistema de memória e aprendizado |
 | [obsidian-integration.md](obsidian-integration.md) | Integração com Obsidian vault |
+| [super-agents/SUPER-AGENTS-INTEGRATION.md](super-agents/SUPER-AGENTS-INTEGRATION.md) | Integração com Super-Agents (OpenClaw, Hermes, Claude Code) |
 | [extending.md](extending.md) | Como extender o sistema |
 | [glossary.md](glossary.md) | Glossário de termos e conceitos |
 
