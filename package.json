@@ -1,6 +1,6 @@
 {
   "name": "@delegado/delegate-os",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "description": "AI Agent Operating System - Context engineering + BMAD/OpenSpec workflows",
   "bin": {
