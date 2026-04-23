@@ -29,6 +29,11 @@ const AGENTS = {
   }
 };
 
+// Individual skills to link from skills/ directory
+const INDIVIDUAL_SKILLS = [
+  { name: 'dos' }
+];
+
 function getHomeDir() {
   return process.env.HOME || process.env.USERPROFILE || '/tmp';
 }
@@ -88,6 +93,31 @@ function linkPackage(agentKey, agent, packagePath) {
   }
 }
 
+function linkIndividualSkill(skillName, packagePath) {
+  const homeDir = getHomeDir();
+  const skillsDir = join(homeDir, '.claude/skills');
+  const targetLink = join(skillsDir, skillName);
+  const sourcePath = join(packagePath, 'skills', skillName);
+
+  ensureDir(skillsDir);
+
+  if (existsSync(targetLink)) {
+    try {
+      rmSync(targetLink, { force: true });
+    } catch {
+      return { skill: skillName, status: 'skipped' };
+    }
+  }
+
+  try {
+    symlinkSync(sourcePath, targetLink);
+    console.log(`✓ ${skillName}: Linked`);
+    return { skill: skillName, status: 'linked' };
+  } catch (err) {
+    return { skill: skillName, status: 'error', error: err.message };
+  }
+}
+
 function main() {
   const packagePath = join(__dirname, '..');
   const homeDir = getHomeDir();
@@ -112,15 +142,13 @@ function main() {
   console.log('\n📋 Summary');
   console.log(`   Linked to ${linked} agent(s)\n`);
 
-  if (linked > 0) {
-    console.log('🚀 Run `delegado --version` to verify installation\n');
+  // Link individual skills
+  console.log('📦 Individual skills:');
+  for (const skill of INDIVIDUAL_SKILLS) {
+    linkIndividualSkill(skill.name, packagePath);
   }
 
-  // Print troubleshooting tips if nothing was linked
-  if (linked === 0) {
-    console.log('💡 Manual linking:');
-    console.log('   mkdir -p ~/.claude/skills && ln -s', packagePath, '~/.claude/skills/delegado-os\n');
-  }
+  console.log('\n🚀 Skills installed! Type /dos-help for commands.\n');
 }
 
 main();
