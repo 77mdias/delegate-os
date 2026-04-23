@@ -2,8 +2,10 @@
   "name": "@delegado/os-delegate",
   "version": "2.0.0",
   "description": "AI Agent OS — HELL-Centric Meta-Prompting with Autonomous CLI Agent",
+  "type": "module",
   "main": "index.js",
   "scripts": {
+    "build": "chmod +x delegado.sh && echo 'Build OK: all scripts are executable'",
     "test": "node tests/meta-prompting.test.js",
     "test:watch": "nodemon --exec 'npm test'",
     "lint": "eslint . || true",
