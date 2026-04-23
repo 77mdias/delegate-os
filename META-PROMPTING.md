@@ -574,3 +574,46 @@ The CLI Agent should show command suggestions when:
 ---
 
 *This is the intelligence layer. HELL is the center. Obsidian is the brain. Automation is the key.*
+---
+
+## 13. SUPER-AGENT ORCHESTRATION
+
+For multi-agent systems (OpenClaw Noir, Hermes, Claude Code, Codex):
+
+### Super-Agent Responsibilities
+
+| Role | Responsibility |
+|------|----------------|
+| Context Owner | Maintains shared context, delegates tasks |
+| HELL Orchestrator | Routes HELL phases to appropriate agents |
+| Memory Authority | Updates MEMORY.md and Obsidian vault |
+| Quality Gate | Validates milestone completion |
+
+### Sub-Agent Spawning Pattern
+
+```yaml
+Spawn for HELL Phase:
+  SPEC     → Spawn: Analyst Agent
+  TDD      → Spawn: Coder Agent
+  REFACTOR → Spawn: Review Agent
+  EVOLVE   → Spawn: DevOps Agent
+  REVIEW   → Spawn: Review Agent
+```
+
+### Inter-Agent Communication
+
+```yaml
+Event_Bus_Topics:
+  - hell.phase.started     # Phase began
+  - hell.phase.completed   # Phase finished
+  - hell.gate.passed       # Milestone achieved
+  - memory.updated          # Memory changed
+  - task.delegated         # Work assigned
+  - context.changed         # Project context updated
+```
+
+→ Full protocol: `docs/super-agents/SUPER-AGENTS-INTEGRATION.md`
+
+---
+
+*This is the intelligence layer. HELL is the center. Obsidian is the brain. Automation is the key. Super-agents are the army.*
