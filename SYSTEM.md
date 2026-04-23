@@ -41,7 +41,49 @@
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
-## Origens
+## META-PROMPTING LAYER
+
+> *"HELL is the center. Obsidian is the brain. Automation is the key."*
+
+### Core Philosophy
+
+O meta-prompting do Delegado OS é baseado em 5 princípios:
+
+1. **HELL IS THE CENTER** — Tudo converge pro HELL Method (GRASP/GoF + TDD + Milestones)
+2. **CLI AGENT IS AUTONOMOUS** — Sabe quando chamar comandos/skills/scripts sem esperar pedido
+3. **OBSIDIAN IS THE BRAIN** — Memória persistente, graph-based, dashboards Dataview
+4. **INTERACTION IS BIDIRECTIONAL** — Agent↔User, Agent↔CLI, Agent↔Obsidian
+5. **AUTOMATION WITHOUT WAITING** — Pattern detection → auto action, Context completion → auto next step
+
+### Autonomous Agent Loop
+
+```
+RECEIVE → ANALYZE → DECIDE → EXECUTE → RECORD → SYNC → VALIDATE → LEARN
+   ↑                                                              │
+   └──────────────────────────────────────────────────────────────┘
+```
+
+| Context Signal | Agent Action | Automation |
+|----------------|--------------|------------|
+| New project opened | Run `/delegado detectar` + setup | FULL AUTO |
+| File changed + spec exists | Suggest TDD if test missing | SEMI-AUTO |
+| Test failing | Run HELL TDD cycle | FULL AUTO |
+| Pattern smell detected | Propose `/delegado hell:refactor` | PROPOSED |
+| Gate criteria met | Propose milestone gate | AUTO-ASK |
+| Obsidian note stale | Sync + update vault | FULL AUTO |
+
+### Skill Auto-Loading
+
+```
+IF request involves "analisar" → Load ANALISE skill
+IF request involves "tdd"/"testar" → Load QUALIDADE + DEVELOPMENT/tdd-cycle
+IF request involves "hell"/"grasp"/"gof" → Load HELL CORE ENGINE
+IF request involves "obsidian" → Load obsidian integration
+```
+
+→ Guia completo: `META-PROMPTING.md`
+
+## Original Archives
 
 | Framework | Influência | Conceito Principal |
 |-----------|------------|-------------------|

@@ -2,6 +2,16 @@
 
 Este projeto contém o sistema Delegado OS.
 
+## Meta-Prompting (Intelligence Layer)
+
+**Consulte `META-PROMPTING.md` para a camada de inteligência.**
+
+Princípios:
+- **HELL é o centro** — Tudo converge para o HELL Method (GRASP/GoF + TDD)
+- **CLI Agent é autônomo** — Sabe quando chamar comandos, skills, scripts automaticamente
+- **Obsidian é o cérebro** — Memória persistente, graph-based, dashboards Dataview
+- **Automação reativa** — Não espera ser perguntado, age baseado em contexto
+
 ## Comandos
 
 ```bash
@@ -13,12 +23,16 @@ Este projeto contém o sistema Delegado OS.
 ## Estrutura
 
 ```
-agent-os/
+delegate-os/
 ├── delegado.sh            # CLI principal
+├── META-PROMPTING.md      # 🆕 Intelligence layer (AUTOMATION)
 ├── kernel/skills/         # Skills do sistema
+├── kernel/hell/           # 🆕 HELL Core Engine (GRASP/GoF/TDD)
 ├── workflows/             # Workflows (BMAD, OpenSpec, GSD)
+├── templates/hell/        # 🆕 HELL templates (spec, tdd, refactor, etc)
 ├── config.yaml           # Configuração
-└── memory/                # Memória persistente
+├── memory/                # Memória persistente
+└── Obsidian/             # 🆕 Vault structure para integração
 ```
 
 ## Activation
