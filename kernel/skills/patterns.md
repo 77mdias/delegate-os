@@ -59,3 +59,42 @@ await transaction(async (tx) => {
   // atomic operations
 }, { isolation: 'Serializable' });
 ```
+
+---
+
+## Template Conventions (Delegado OS)
+
+### Standard Frontmatter
+```yaml
+---
+title: "[Descritivo]"
+type: [proposal|spec|design|architecture|sprint|phase|task]
+mode: [proposal|specification|design|execution|validation]
+status: [draft|in-progress|review|done]
+version: 1.0.0
+author: "{{author}}"
+date: "{{date}}"
+related-docs: []
+---
+```
+
+### Template Locations
+| Type | Path |
+|------|------|
+| `proposal` | `templates/proposal/` |
+| `spec` | `templates/spec/` |
+| `design` | `templates/design/` |
+| `architecture` | `templates/architecture/` |
+| `sprint` | `templates/tasks/sprint.template.md` |
+| `phase-board` | `templates/tasks/phase-board.template.md` |
+| `single-task` | `templates/tasks/single-task.template.md` |
+| `prd` | `templates/prd/` |
+
+### Status Indicators
+- 🔴🔵🟡🟢 → Priority (critical/high/medium/low)
+- ✅🚧⏳⛔⬜ → Task Status (done/in-progress/pending/blocked/not-started)
+
+### Workflow Chain
+```
+proposal → spec → design → tasks → implement → verify → archive
+```

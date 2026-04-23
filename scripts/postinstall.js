@@ -1,10 +1,17 @@
 #!/usr/bin/env node
 /**
  * Delegado OS - Postinstall Script
- * Auto-links the package and individual skills to AI agent skills directories
+ * Auto-links the package and individual skills to AI agent skills directories.
+ * 
+ * Discovers ALL skills recursively under skills/dos/:
+ *   skills/dos/help/         → ~/.claude/skills/dos-help
+ *   skills/dos/hell/         → ~/.claude/skills/dos-hell
+ *   skills/dos/hell/spec/    → ~/.claude/skills/dos-hell-spec
+ *   skills/dos/hell/tdd/     → ~/.claude/skills/dos-hell-tdd
+ *   ...etc
  */
 
-import { existsSync, symlinkSync, mkdirSync, readdirSync, statSync, rmSync } from 'fs';
+import { existsSync, symlinkSync, mkdirSync, readdirSync, statSync, rmSync, readlinkSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -31,12 +38,17 @@ function linkIfNotExists(source, target) {
   if (existsSync(target)) {
     try {
       const stats = statSync(target);
-      if (stats.isSymbolicLink()) {
-        const linkTarget = readlinkSync(target);
-        if (linkTarget === source) {
-          return 'already_linked';
-        }
+      if (stats.isSymbolicLink && stats.isSymbolicLink()) {
+        try {
+          const linkTarget = readlinkSync(target);
+          if (linkTarget === source) {
+            return 'already_linked';
+          }
+        } catch {}
         rmSync(target);
+      } else if (existsSync(join(target, 'SKILL.md'))) {
+        // Already exists as a real directory with SKILL.md — skip
+        return 'already_linked';
       } else {
         return 'exists_not_symlink';
       }
@@ -52,6 +64,50 @@ function linkIfNotExists(source, target) {
   }
 }
 
+/**
+ * Recursively discover all skill directories under a given base path.
+ * A directory is a skill if it contains a SKILL.md file.
+ * 
+ * Naming convention:
+ *   Level 1: dos-{name}       (e.g. dos-hell, dos-bmad)
+ *   Level 2+: parent:{name}   (e.g. dos-hell:spec, dos-hell:tdd)
+ * 
+ * @param {string} baseDir - Directory to scan
+ * @param {string} prefix - Prefix for the skill name (e.g. 'dos')
+ * @param {number} depth - Current recursion depth (0 = first level)
+ * @returns {Array<{name: string, path: string}>} List of discovered skills
+ */
+function discoverSkills(baseDir, prefix, depth = 0) {
+  const skills = [];
+  
+  if (!existsSync(baseDir)) return skills;
+  
+  const entries = readdirSync(baseDir);
+  for (const entry of entries) {
+    if (entry === 'SKILL.md' || entry.startsWith('.')) continue;
+    
+    const entryPath = join(baseDir, entry);
+    const stats = statSync(entryPath);
+    
+    if (stats.isDirectory()) {
+      // Level 0 uses '-' (dos-hell), deeper levels use ':' (dos-hell:spec)
+      const separator = depth === 0 ? '-' : ':';
+      const skillName = `${prefix}${separator}${entry}`;
+      const hasSkill = existsSync(join(entryPath, 'SKILL.md'));
+      
+      if (hasSkill) {
+        skills.push({ name: skillName, path: entryPath });
+      }
+      
+      // Recurse into subdirectories for nested skills (e.g. hell/spec, hell/tdd)
+      const subSkills = discoverSkills(entryPath, skillName, depth + 1);
+      skills.push(...subSkills);
+    }
+  }
+  
+  return skills;
+}
+
 function main() {
   const packagePath = join(__dirname, '..');
   const skillsBase = join(packagePath, 'skills');
@@ -65,6 +121,7 @@ function main() {
   for (const [key, agent] of Object.entries(AGENTS)) {
     const skillsDir = join(homeDir, agent.dir);
     if (existsSync(skillsDir) || process.argv.includes('--force')) {
+      ensureDir(skillsDir);
       const targetLink = join(skillsDir, 'delegado-os');
       const result = linkIfNotExists(packagePath, targetLink);
       const icons = { linked: '✓', already_linked: '✓', exists_not_symlink: '⚠', error: '✗' };
@@ -78,27 +135,46 @@ function main() {
     }
   }
 
-  // Link individual skills: skills/dos/[name] -> ~/.claude/skills/dos-[name]
-  console.log('\n📦 Individual skills:');
-  if (existsSync(skillsBase)) {
-    const dosDir = join(skillsBase, 'dos');
-    if (existsSync(dosDir)) {
-      const entries = readdirSync(dosDir);
-      for (const entry of entries) {
-        const entryPath = join(dosDir, entry);
-        const stats = statSync(entryPath);
-        if (stats.isDirectory()) {
-          const targetLink = join(homeDir, '.claude/skills', `dos-${entry}`);
-          const result = linkIfNotExists(entryPath, targetLink);
-          const icons = { linked: '✓', already_linked: '✓', exists_not_symlink: '⚠', error: '✗' };
-          console.log(`${icons[result]} dos-${entry}: Linked`);
-        }
+  // Root dos skill: skills/dos -> ~/.claude/skills/dos
+  console.log('\n📦 Root skill:');
+  const dosDir = join(skillsBase, 'dos');
+  if (existsSync(dosDir)) {
+    for (const [key, agent] of Object.entries(AGENTS)) {
+      const skillsDir = join(homeDir, agent.dir);
+      if (existsSync(skillsDir)) {
+        const targetLink = join(skillsDir, 'dos');
+        const result = linkIfNotExists(dosDir, targetLink);
+        const icons = { linked: '✓', already_linked: '✓', exists_not_symlink: '⚠', error: '✗' };
+        console.log(`${icons[result]} dos → ${agent.name}`);
       }
     }
   }
 
+  // Discover and link ALL individual skills recursively
+  console.log('\n📦 Individual skills (recursive):');
+  if (existsSync(dosDir)) {
+    const skills = discoverSkills(dosDir, 'dos');
+    
+    for (const skill of skills) {
+      for (const [key, agent] of Object.entries(AGENTS)) {
+        const skillsDir = join(homeDir, agent.dir);
+        if (existsSync(skillsDir)) {
+          const targetLink = join(skillsDir, skill.name);
+          const result = linkIfNotExists(skill.path, targetLink);
+          const icons = { linked: '✓', already_linked: '✓', exists_not_symlink: '⚠', error: '✗' };
+          if (result === 'linked') {
+            console.log(`  ${icons[result]} ${skill.name}`);
+          }
+        }
+      }
+    }
+    
+    console.log(`\n  Total: ${skills.length} skills discovered`);
+  }
+
   console.log('\n🚀 Skills installed! Commands available:');
-  console.log('   /dos, /dos-bmad, /dos-help, /dos-propose, /dos-specs, etc.\n');
+  console.log('   /dos, /dos-bmad, /dos-hell, /dos-hell-spec, /dos-hell-tdd, etc.');
+  console.log('   Run /dos-help for the full command reference.\n');
 }
 
 main();

@@ -26,6 +26,15 @@ proposal ──► specs ──► design ──► tasks ──► implement
  + scope   changes    approach   to take
 ```
 
+## Templates
+
+Os templates estão em `templates/`:
+- `templates/proposal/proposal.template.md` → `/propose`
+- `templates/spec/spec.template.md` → `/specs`
+- `templates/design/design.template.md` → `/design`
+- `templates/tasks/*.template.md` → `/tasks`
+- `templates/architecture/architecture.template.md` → ADR decisions
+
 ## Comandos
 
 | Comando | Função |

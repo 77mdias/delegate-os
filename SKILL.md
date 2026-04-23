@@ -1,7 +1,7 @@
 ---
 name: delegado-os
-description: "AI Agent OS — Context engineering + BMAD/OpenSpec workflows | /delegado [bmad|propose|specs|design|tasks|apply|verify|context|memory|learn|feedback]"
-argument-hint: "[bmad|propose|specs|design|tasks|apply|verify|context|memory|learn|feedback]"
+description: "AI Agent OS — Context engineering + BMAD/OpenSpec/HELL workflows | /delegado [bmad|hell|propose|specs|design|tasks|apply|verify|context|memory|learn|feedback]"
+argument-hint: "[bmad|hell|propose|specs|design|tasks|apply|verify|context|memory|learn|feedback]"
 allowed-tools:
   - Read
   - Write
@@ -60,10 +60,26 @@ BRIEFING → ANÁLISE → DECOMPOSIÇÃO → EXECUÇÃO → VALIDAÇÃO → ENTR
 | /delegado learn [regra]    | Ensinar nova regra           |
 | /delegado feedback [texto] | Registrar feedback           |
 
+### 💀 HELL Method
+
+| Comando                    | Função                              |
+| -------------------------- | ----------------------------------- |
+| /delegado hell             | HELL Method help                    |
+| /delegado hell:spec        | Especificação GRASP + domain model  |
+| /delegado hell:tdd         | Ciclo TDD Red/Green/Refactor        |
+| /delegado hell:refactor    | Refatoração GoF com smell detection |
+| /delegado hell:evolve      | CI/CD + tech debt tracking          |
+| /delegado hell:review      | Review + sugestão de features/specs |
+| /delegado hell:audit       | Auditoria GRASP/GoF compliance      |
+| /delegado hell:milestone   | Gate de milestone (checkpoint)      |
+| /delegado hell:debt        | Tech debt backlog                   |
+| /delegado hell:status      | Dashboard do ciclo HELL             |
+
 ## Sub-Skills
 
 | Skill        | Função                         |
 | ------------ | ------------------------------ |
+| HELL         | HELL Method (GRASP/GoF + TDD)  |
 | ANALISE      | Análise profunda de código     |
 | EXECUCAO     | Execução de tarefas atômicas   |
 | PLANEJAMENTO | Decomposição e planejamento    |

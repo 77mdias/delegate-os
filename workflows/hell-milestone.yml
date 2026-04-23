@@ -1,0 +1,125 @@
+---
+name: hell-milestone
+description: Workflow com milestone gates integrados ao HELL Method
+version: 1.0.0
+parent: especificacao.yml
+
+gates:
+  - id: M-SPEC
+    after: specs
+    criteria:
+      - requirements_prioritized
+      - domain_modeled
+      - variation_points_identified
+      - glossary_documented
+    blocking: true
+
+  - id: M-TEST
+    after: implement
+    criteria:
+      - coverage_80_percent
+      - zero_failures
+      - zero_skipped
+      - critical_paths_tested
+      - tdd_log_documented
+    blocking: true
+
+  - id: M-QUALITY
+    after: verify
+    criteria:
+      - audit_score_70_percent
+      - no_critical_smells
+      - coupling_under_5
+      - grasp_justified
+      - diagrams_updated
+    blocking: true
+
+  - id: M-SHIP
+    after: evolve
+    criteria:
+      - pipeline_green
+      - zero_critical_vulns
+      - debt_cataloged
+      - docs_synced
+      - review_completed
+      - breaking_changes_documented
+    blocking: true
+
+  - id: M-REVIEW
+    after: review
+    criteria:
+      - review_score_60
+      - no_blockers
+      - features_triaged
+      - specs_proposed_or_rejected
+      - debt_logged
+    blocking: false
+---
+
+# Workflow: HELL Milestone (Checkpoint-Driven)
+
+## Fluxo com Gates
+
+```
+proposal ──► specs ──► [M-SPEC] ──► design ──► hell:spec ──► hell:tdd
+                                                                │
+                                                            [M-TEST]
+                                                                │
+                                                          hell:refactor
+                                                                │
+                                                          [M-QUALITY]
+                                                                │
+                                                           hell:evolve
+                                                                │
+                                                           [M-SHIP]
+                                                                │
+                                                            DEPLOYED
+                                                                │
+                                                          hell:review
+                                                                │
+                                                          [M-REVIEW]
+                                                                │
+                                                        ← feedback loop →
+```
+
+## BMAD + HELL Integration
+
+```
+┌──────────┐         ┌──────────┐         ┌────────────┐         ┌──────────────┐
+│ ANALYSIS │──[M1]──►│ PLANNING │──[M2]──►│ SOLUTIONING│──[M3]──►│IMPLEMENTATION│──[M4]──►
+└──────────┘         └──────────┘         └────────────┘         └──────────────┘
+     │                    │                     │                       │
+     ▼                    ▼                     ▼                       ▼
+  proposal           PRD/specs              architecture            tasks/code
+                         │                     │                       │
+                    hell:spec              hell:tdd                hell:review
+                         │                     │                       │
+                     [M-SPEC]              [M-TEST]                [M-REVIEW]
+```
+
+## Standalone Usage
+
+```
+/dos-hell:milestone           # Auto-detect milestone type
+/dos-hell:milestone spec      # Force M-SPEC gate
+/dos-hell:milestone test      # Force M-TEST gate
+/dos-hell:milestone quality   # Force M-QUALITY gate
+/dos-hell:milestone ship      # Force M-SHIP gate
+/dos-hell:milestone review    # Force M-REVIEW gate
+```
+
+## Verdict Logic
+
+```
+Score ≥90% AND zero critical → ✅ PASSED  → Proceed
+Score ≥70% AND zero critical → ⚠️ CONDITIONAL → Proceed with action items
+Score <70% OR any critical   → ❌ BLOCKED → Fix and re-evaluate
+```
+
+## Artifacts
+
+| Artifact | Location |
+|----------|----------|
+| Milestone Report | `changes/[proposal]/hell-milestone.md` |
+| Milestone History | Appended to report |
+| Blocking Issues | Linked to fix commands |
