@@ -1,0 +1,162 @@
+name: HELL AUDIT
+
+on:
+  workflow_dispatch:
+    inputs:
+      module:
+        description: 'Module to audit (leave empty for all)'
+        required: false
+        type: string
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly on Sunday
+
+jobs:
+  hell-audit:
+    name: HELL GRASP/SOLID Audit
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup
+        run: |
+          echo "=== HELL AUDIT ==="
+          echo "Date: $(date)"
+          echo "Commit: ${{ github.sha }}"
+          echo ""
+
+      - name: Check HELL CORE ENGINE
+        run: |
+          echo "Checking HELL CORE ENGINE..."
+          if [ -f "kernel/hell/HELL-CORE-ENGINE.md" ]; then
+            echo "✅ HELL CORE ENGINE found"
+            echo "   Size: $(wc -c < kernel/hell/HELL-CORE-ENGINE.md) bytes"
+          else
+            echo "❌ HELL CORE ENGINE missing"
+            exit 1
+          fi
+
+      - name: GRASP Patterns check
+        run: |
+          echo ""
+          echo "=== GRASP Patterns ==="
+          GRASP_PATTERNS=(
+            "Information Expert"
+            "Creator"
+            "Controller"
+            "Low Coupling"
+            "High Cohesion"
+            "Polymorphism"
+            "Pure Fabrication"
+            "Indirection"
+            "Protected Variations"
+          )
+          
+          for pattern in "\${GRASP_PATTERNS[@]}"; do
+            if grep -r "$pattern" kernel/ >/dev/null 2>&1; then
+              echo "✅ $pattern documented"
+            else
+              echo "⚠️  $pattern not documented"
+            fi
+          done
+
+      - name: GoF Patterns check
+        run: |
+          echo ""
+          echo "=== GoF Patterns ==="
+          GOF_PATTERNS=(
+            "Strategy"
+            "Factory Method"
+            "Observer"
+            "Repository"
+            "Singleton"
+            "Adapter"
+            "Facade"
+            "Decorator"
+          )
+          
+          for pattern in "\${GOF_PATTERNS[@]}"; do
+            if grep -r "$pattern" kernel/ >/dev/null 2>&1; then
+              echo "✅ $pattern documented"
+            else
+              echo "⚠️  $pattern not documented"
+            fi
+          done
+
+      - name: HELL Templates check
+        run: |
+          echo ""
+          echo "=== HELL Templates ==="
+          TEMPLATES=(
+            "hell-spec"
+            "hell-tdd-log"
+            "hell-tdd-task"
+            "hell-refactor"
+            "hell-adr"
+            "hell-evolution"
+            "hell-tech-debt"
+            "hell-review"
+            "hell-audit-report"
+            "hell-milestone"
+          )
+          
+          for tmpl in "\${TEMPLATES[@]}"; do
+            if ls templates/hell/\${tmpl}* >/dev/null 2>&1; then
+              echo "✅ $tmpl template exists"
+            else
+              echo "⚠️  $tmpl template missing"
+            fi
+          done
+
+      - name: Audit Report
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          MODULE="${{ github.event.inputs.module }}"
+          echo ""
+          echo "=== AUDIT REPORT: \${MODULE:-ALL} ==="
+          
+          if [ -d "audit" ]; then
+            LAST_AUDIT=$(find audit -name '*.md' | sort -r | head -1)
+            if [ -n "$LAST_AUDIT" ]; then
+              echo "Last audit: $LAST_AUDIT"
+            fi
+          fi
+          
+          echo ""
+          echo "To run a new audit:"
+          echo "  node scripts/hell/hell-cycle.js audit \${MODULE:-module_name}"
+
+  milestone-gate:
+    name: Milestone Gate Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check milestone gates
+        run: |
+          echo "=== MILESTONE GATES ==="
+          
+          GATES=("M-SPEC" "M-TEST" "M-QUALITY" "M-SHIP" "M-REVIEW")
+          
+          for gate in "\${GATES[@]}"; do
+            if ls milestones/*\${gate,,}*.md >/dev/null 2>&1; then
+              echo "✅ $gate gate exists"
+            else
+              echo "⬜ $gate gate not yet created"
+            fi
+          done
+
+      - name: Summary
+        run: |
+          echo ""
+          echo "=== SUMMARY ==="
+          TOTAL_SPECS=$(find specs -name '*.md' 2>/dev/null | wc -l)
+          TOTAL_TDD=$(find tdd -name '*.md' 2>/dev/null | wc -l)
+          TOTAL_DECISIONS=$(find decisions -name '*.md' 2>/dev/null | wc -l)
+          
+          echo "Specs: $TOTAL_SPECS"
+          echo "TDD Logs: $TOTAL_TDD"
+          echo "ADRs: $TOTAL_DECISIONS"

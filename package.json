@@ -1,57 +1,44 @@
 {
-  "name": "@delegado/delegate-os",
-  "version": "1.1.1",
-  "type": "module",
-  "description": "AI Agent Operating System - Context engineering + BMAD/OpenSpec/HELL Method workflows",
-  "bin": {
-    "delegado": "delegado.sh"
+  "name": "@delegado/os-delegate",
+  "version": "2.0.0",
+  "description": "AI Agent OS — HELL-Centric Meta-Prompting with Autonomous CLI Agent",
+  "main": "index.js",
+  "scripts": {
+    "test": "node tests/meta-prompting.test.js",
+    "test:watch": "nodemon --exec 'npm test'",
+    "lint": "eslint . || true",
+    "delegado": "./delegado.sh",
+    "hell:spec": "node scripts/hell/hell-cycle.js spec",
+    "hell:tdd": "node scripts/hell/hell-cycle.js tdd",
+    "hell:refactor": "node scripts/hell/hell-cycle.js refactor",
+    "hell:audit": "node scripts/hell/hell-cycle.js audit",
+    "hell:milestone": "node scripts/hell/hell-cycle.js milestone",
+    "obsidian:sync": "node scripts/obsidian/obsidian-sync.js sync",
+    "ci:validate": "node scripts/ci/validate.js --all",
+    "plugin": "node plugin/plugin-loader.js",
+    "postinstall": "node scripts/postinstall.js"
   },
-  "files": [
-    "delegado.sh",
-    "CLAUDE.md",
-    "SKILL.md",
-    "README.md",
-    "SYSTEM.md",
-    "config.yaml",
-    "kernel/",
-    "skills/",
-    "workflows/",
-    "subagents/",
-    "memory/",
-    "prompts/",
-    "templates/",
-    "modes/",
-    "specs/",
-    "changes/",
-    "docs/",
-    "scripts/"
-  ],
   "keywords": [
     "ai-agent",
-    "claude-code",
-    "codex",
-    "cursor",
-    "skill",
-    "context-engineering",
-    "bmad",
-    "hell-method",
-    "grasp",
-    "gof",
-    "tdd",
-    "workflow",
     "meta-prompting",
+    "hell-method",
+    "tdd",
+    "grasp",
+    "gof-patterns",
+    "delegado-os",
     "agent-os"
   ],
+  "author": "77mdias",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/77mdias/delegate-os.git"
+  },
   "engines": {
     "node": ">=18.0.0"
   },
-  "scripts": {
-    "postinstall": "node scripts/postinstall.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/delegado-os/delegado-os-delegate"
-  },
-  "author": "Delegado OS",
-  "license": "MIT"
+  "dependencies": {},
+  "devDependencies": {
+    "nodemon": "^3.0.0"
+  }
 }
