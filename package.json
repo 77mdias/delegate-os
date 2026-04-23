@@ -4,7 +4,7 @@
   "type": "module",
   "description": "AI Agent Operating System - Context engineering + BMAD/OpenSpec workflows",
   "bin": {
-    "delegado": "./delegado.sh"
+    "delegado": "delegado.sh"
   },
   "files": [
     "delegado.sh",
