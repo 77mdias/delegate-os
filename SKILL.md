@@ -1,158 +1,85 @@
 ---
-name: delegado-os
-description: AI Agent Operating System - Context engineering + BMAD/OpenSpec workflows
-category: framework
-trigger: >
-  /delegado, /delegado-os, /os, agente, context engineering,
-  /propose, /spec, /design, /tasks, /apply,
-  /bmad, /analysis, /planning, /solutioning, /implementation,
-  /memory, /learn, /feedback, /context, /workflow
-when_to_use: >
-  Para qualquer tarefa de desenvolvimento que precise de metodologia estruturada.
-  Este skill ativa o sistema Delegado OS com workflows BMAD e OpenSpec.
-version: 1.0.0
-depends_on: []
+name: delegado
+description: "AI Agent OS — Context engineering + BMAD/OpenSpec workflows | /delegado [bmad|propose|specs|design|tasks|apply|verify|context|memory|learn|feedback]"
+argument-hint: "[bmad|propose|specs|design|tasks|apply|verify|context|memory|learn|feedback]"
+allowed-tools:
+  - Read
+  - Write
+  - Bash
+  - Glob
+  - Grep
+  - Edit
 ---
 
-# Delegado OS — AI Agent Operating System
+<objective>
+Delegado OS — AI Agent Operating System
 
-> *"O contexto é poder. A memória é força. A execução é brutal."*
+"O contexto é poder. A memória é força. A execução é brutal."
 
-## Overview
+Sistema de meta-prompting para desenvolvimento de software assistido por IA.
+</objective>
 
-Delegado OS é um sistema de meta-prompting para desenvolvimento de software assistido por IA, integrando:
-
-- **BMAD Method**: 4 fases (Analysis → Planning → Solutioning → Implementation)
-- **OpenSpec**: Workflow spec-driven (proposal → specs → design → tasks → implement)
-- **GSD (Get Shit Done)**: Tarefas atômicas e workflows em fases
-- **Memory**: Sistema de memória persistente que aprende preferências
-- **Context Engine**: Engenharia de contexto com templates XML/Markdown
-
-## Quick Start
-
-```
-/delegado              → Menu principal
-/delegado bmad         → Ativar BMad Method (4 fases)
-/delegado propose [x]  → Criar proposal OpenSpec
-/delegado memory       → Ver memória aprendida
-```
-
+<context>
 ## Workflows
 
 ### BMAD (4 Fases)
-
-| ID | Fase | Cor | Artefatos |
-|----|------|-----|-----------|
-| 1 | ANALYSIS | #FF6B6B | proposal.md |
-| 2 | PLANNING | #4ECDC4 | prd.md, specs.md |
-| 3 | SOLUTIONING | #45B7D1 | architecture.md, design.md |
-| 4 | IMPLEMENTATION | #96CEB4 | tasks.md, código |
+| Fase | Cor | Artefatos |
+|------|-----|-----------|
+| ANALYSIS | #FF6B6B | proposal.md |
+| PLANNING | #4ECDC4 | prd.md, specs.md |
+| SOLUTIONING | #45B7D1 | architecture.md |
+| IMPLEMENTATION | #96CEB4 | tasks.md, código |
 
 ### OpenSpec (Spec-Driven)
-
-```
-proposal ──► specs ──► design ──► tasks ──► implement
-    │           │          │          │
-   why        what       how       steps
- + scope   changes    approach   to take
-```
+proposal → specs → design → tasks → implement
 
 ### GSD (Atomic)
+BRIEFING → ANÁLISE → DECOMPOSIÇÃO → EXECUÇÃO → VALIDAÇÃO → ENTREGUE
 
-```
-BRIEFING ──── ANÁLISE ──── DECOMPOSIÇÃO ──── EXECUÇÃO ──── VALIDAÇÃO ──── ENTREGUE
-```
-
-## Comandos Completos
-
-### SPEC-DRIVEN (OpenSpec)
+## Comandos
 
 | Comando | Função |
 |---------|--------|
-| `/delegado propose [nome]` | Criar change proposal |
-| `/delegado specs` | Criar/editar specs |
-| `/delegado design` | Criar/editar design |
-| `/delegado tasks` | Gerar tasks da spec |
-| `/delegado apply` | Executar tasks pendentes |
-| `/delegado verify` | Verificar implementação |
+| /delegado bmad | Ativar BMad Method (4 fases) |
+| /delegado bmad:1 | Fase 1: ANALYSIS |
+| /delegado bmad:2 | Fase 2: PLANNING |
+| /delegado bmad:3 | Fase 3: SOLUTIONING |
+| /delegado bmad:4 | Fase 4: IMPLEMENTATION |
+| /delegado propose [nome] | Criar change proposal |
+| /delegado specs | Criar/editar specs |
+| /delegado design | Criar/editar design |
+| /delegado tasks | Gerar tasks da spec |
+| /delegado apply | Executar tasks pendentes |
+| /delegado verify | Verificar implementação |
+| /delegado context | Carregar contexto atual |
+| /delegado memory | Ver memória atual |
+| /delegado memory:rules | Ver regras aprendidas |
+| /delegado learn [regra] | Ensinar nova regra |
+| /delegado feedback [texto] | Registrar feedback |
 
-### BMAD (4 Fases)
-
-| Comando | Função |
-|---------|--------|
-| `/delegado bmad` | Ativar BMad Method |
-| `/delegado bmad:1` ou `/delegado analysis` | Fase 1: Analysis |
-| `/delegado bmad:2` ou `/delegado planning` | Fase 2: Planning |
-| `/delegado bmad:3` ou `/delegado solutioning` | Fase 3: Solutioning |
-| `/delegado bmad:4` ou `/delegado implementation` | Fase 4: Implementation |
-
-### CONTEXTO & MEMÓRIA
-
-| Comando | Função |
-|---------|--------|
-| `/delegado context` | Carregar contexto atual |
-| `/delegado memory` | Ver memória atual |
-| `/delegado memory:rules` | Ver regras aprendidas |
-| `/delegado learn [regra]` | Ensinar nova regra |
-| `/delegado feedback [texto]` | Registrar feedback |
-
-## Sub-Skills (Kernel)
-
-O sistema inclui sub-skills organizadas por domínio:
-
+## Sub-Skills
 | Skill | Função |
 |-------|--------|
-| `ANALISE` | Análise profunda de código e requisitos |
-| `EXECUCAO` | Execução de tarefas atômicas |
-| `PLANEJAMENTO` | Decomposição e planejamento |
-| `QUALIDADE` | Review, validação e质量的 |
-| `SETUP` | Onboarding e detecção de projeto |
-| `DEVELOPMENT` | Bugfix, feature-delivery, refactor, TDD |
+| ANALISE | Análise profunda de código |
+| EXECUCAO | Execução de tarefas atômicas |
+| PLANEJAMENTO | Decomposição e planejamento |
+| QUALIDADE | Review e validação |
+| SETUP | Onboarding e detecção |
+| DEVELOPMENT | Bugfix, feature, refactor, TDD |
+</context>
 
-## Artefatos
+<process>
+Execute the requested Delegado OS workflow or display the command reference.
 
-O sistema gera e mantém artefatos em `changes/`:
-
-```
-changes/[nome]/
-├── proposal.md      # Proposal original
-├── prd.md          # Product Requirements Document
-├── specs/          # Especificações detalhadas
-├── design.md       # Design técnico
-├── architecture.md # Arquitetura
-└── tasks.md        # Tarefas atômicas
-```
-
-## Memória
-
-O sistema mantém memória persistente em `.delegado/memory/`:
-
-- **regras.md** — Regras aprendidas do projeto
-- **preferencias.md** — Preferências do usuário
-- **feedback.md** — Feedback registrado
-- **conventions.md** — Convenções extraídas
-
-## CLI
-
-For CLI access, run `delegado` in your terminal:
-
-```bash
-delegado          # Menu interativo
-delegado --version  # Ver versão
-```
-
-## Output Format
-
-```markdown
-## Delegado OS — [Workflow]
-
-### Phase: [current]
-### Status: [in_progress/complete]
-
-### Artefatos
-- ✅ proposal.md
-- ⏳ specs.md
-
-### Próximo
-→ Executar `/delegado specs` para continuar
-```
+For /delegado bmad: Guide through BMAD 4-phase method
+For /delegado propose: Create new change proposal
+For /delegado specs: Create/update specifications
+For /delegado design: Create technical design
+For /delegado tasks: Generate atomic tasks
+For /delegado apply: Execute pending tasks
+For /delegado verify: Validate implementation
+For /delegado context: Load and display context
+For /delegado memory: Show learned memory
+For /delegado learn: Teach new rule
+For /delegado feedback: Register feedback
+</process>
