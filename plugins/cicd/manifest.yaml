@@ -1,0 +1,21 @@
+name: cicd
+version: 1.0.0
+type: plugin
+description: CI/CD pipeline integration for Delegado OS
+author: Delegado OS Team
+
+hooks:
+  pre_build:
+    script: hooks/pre_build.sh
+    description: "Runs before build process"
+  post_build:
+    script: hooks/post_build.sh
+    description: "Runs after successful build"
+  on_failure:
+    script: hooks/on_failure.sh
+    description: "Runs when build fails"
+
+config:
+  enabled: true
+  notify_on_complete: true
+  sync_to_obsidian: true

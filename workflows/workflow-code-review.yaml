@@ -1,0 +1,50 @@
+name: Code Review Workflow
+description: Automated code review pipeline with security and quality gates
+
+modes:
+  - GUARDIAN    # Security review first
+  - REVIEW      # Code quality review
+  - CODER       # Implementation fixes
+
+trigger:
+  keywords: ["review", "pr", "pull request", "code review"]
+  file_patterns: ["*.py", "*.js", "*.ts", "*.go", "*.rs"]
+
+phases:
+  phase_1_security:
+    mode: GUARDIAN
+    tasks:
+      - OWASP dependency scan
+      - Secret detection
+      - SQL injection check
+      - XSS vulnerability check
+      - Authentication/authorization review
+    gate: All critical issues resolved
+
+  phase_2_quality:
+    mode: REVIEW
+    tasks:
+      - Code style compliance
+      - Test coverage analysis
+      - Performance anti-patterns
+      - Error handling review
+      - Documentation completeness
+    gate: No blocking issues
+
+  phase_3_implementation:
+    mode: CODER
+    tasks:
+      - Apply suggested fixes
+      - Update tests if needed
+      - Commit changes
+    gate: All phase 2 issues addressed
+
+output:
+  - Security report (Obsidian)
+  - Quality report (Obsidian)
+  - Commit with fixes
+  - Pull request comments
+
+obsidian_sync:
+  security_report: 00-GUARDIAN/reviews/
+  quality_report: 00-REVIEW/reviews/

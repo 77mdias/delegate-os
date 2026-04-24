@@ -1,0 +1,54 @@
+name: Architecture Proposal Workflow
+description: End-to-end architecture design from research to proposal
+
+modes:
+  - RESEARCHER  # Technology and pattern research
+  - ARCHITECT   # System design
+  - CONSULTANT  # Business viability analysis
+
+trigger:
+  keywords: ["architecture", "design", "system structure", "proposal", "microservices"]
+  project_type: ["new_project", "refactor", "scaling"]
+
+phases:
+  phase_1_research:
+    mode: RESEARCHER
+    tasks:
+      - Technology stack comparison
+      - Similar architecture patterns research
+      - Performance benchmarks
+      - Community and support analysis
+      - Migration complexity assessment
+    output: Technology recommendation report
+
+  phase_2_design:
+    mode: ARCHITECT
+    tasks:
+      - Component architecture diagram
+      - Data flow design
+      - API contract definitions
+      - Security architecture
+      - Scalability design
+      - Disaster recovery plan
+    output: Architecture Design Document
+
+  phase_3_analysis:
+    mode: CONSULTANT
+    tasks:
+      - Cost-benefit analysis
+      - Implementation timeline
+      - Risk assessment
+      - Resource requirements
+      - ROI projection
+    output: Business proposal
+
+output:
+  - Research report (Obsidian)
+  - Architecture document (Obsidian)
+  - Business proposal (Obsidian)
+  - Presentation-ready summary
+
+obsidian_sync:
+  research: 00-RESEARCHER/architecture/
+  architecture: 00-ARCHITECT/proposals/
+  consultant: 00-CONSULTANT/proposals/

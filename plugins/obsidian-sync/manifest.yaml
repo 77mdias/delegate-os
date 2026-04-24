@@ -1,0 +1,24 @@
+name: obsidian-sync
+version: 1.0.0
+type: plugin
+description: Two-way sync between Delegado OS and Obsidian vault
+author: Delegado OS Team
+
+hooks:
+  on_content_created:
+    script: hooks/on_content_created.sh
+  on_session_sync:
+    script: hooks/on_session_sync.sh
+  on_note_requested:
+    script: hooks/on_note_requested.sh
+
+config:
+  enabled: true
+  vault_path: ~/obsidian-vault
+  auto_sync: true
+  sync_interval_minutes: 5
+  bidirectional: true
+  tags:
+    - delegado
+    - agent
+    - session

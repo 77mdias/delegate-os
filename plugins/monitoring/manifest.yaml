@@ -1,0 +1,27 @@
+name: monitoring
+version: 1.0.0
+type: plugin
+description: Agent performance monitoring and metrics tracking
+author: Delegado OS Team
+
+hooks:
+  on_session_start:
+    script: hooks/on_session_start.sh
+  on_session_end:
+    script: hooks/on_session_end.sh
+  on_mode_switch:
+    script: hooks/on_mode_switch.sh
+
+config:
+  enabled: true
+  metrics_retention_days: 30
+  track_response_time: true
+  track_context_usage: true
+
+metrics:
+  - session_count
+  - mode_usage
+  - response_time_ms
+  - context_tokens_used
+  - tasks_completed
+  - errors_encountered

@@ -1,0 +1,60 @@
+name: Debugging Session Workflow
+description: Systematic debugging from reproduction to resolution
+
+modes:
+  - DEBUGGER   # Root cause analysis
+  - GUARDIAN   # Security implications of the bug
+  - CODER      # Implement the fix
+
+trigger:
+  keywords: ["bug", "error", "crash", "issue", "not working", "debug"]
+  error_patterns: ["Exception", "Error:", "Traceback", "panic", "FAILED"]
+
+phases:
+  phase_1_reproduce:
+    mode: DEBUGGER
+    tasks:
+      - Reproduce the bug consistently
+      - Gather error logs and traces
+      - Identify affected components
+      - Map the happy path vs actual path
+      - Identify potential root causes
+    output: Bug reproduction report
+
+  phase_2_analysis:
+    mode: DEBUGGER
+    tasks:
+      - Root cause analysis (5 Whys)
+      - Data flow analysis
+      - State inspection
+      - Memory/profiler analysis if needed
+      - Identify if it's a pattern or isolated issue
+    output: Root cause analysis
+
+  phase_3_security_check:
+    mode: GUARDIAN
+    tasks:
+      - Check if bug has security implications
+      - OWASP category assessment
+      - Attack vector analysis
+      - Confidentiality/integrity/availability impact
+    gate: Security issues escalated if found
+
+  phase_4_fix:
+    mode: CODER
+    tasks:
+      - Implement the fix
+      - Add regression tests
+      - Update documentation
+      - Verify fix resolves the issue
+    output: Fix with tests
+
+output:
+  - Bug analysis (Obsidian)
+  - Security assessment (Obsidian)
+  - Fixed code
+  - Test coverage
+
+obsidian_sync:
+  analysis: 00-DEBUGGER/bugs/
+  security: 00-GUARDIAN/issues/

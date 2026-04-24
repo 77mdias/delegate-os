@@ -1,0 +1,62 @@
+name: Teaching Session Workflow
+description: Comprehensive teaching workflow from preparation to knowledge retention
+
+modes:
+  - PROFESSOR    # Teaching delivery
+  - RESEARCHER   # Content research and examples
+  - MENTOR       # Personalized guidance
+
+trigger:
+  keywords: ["teach", "learn", "explain", "tutorial", "how to", "conceito", "ensinar"]
+  topic_type: ["concept", "pattern", "language", "framework", "tool"]
+
+phases:
+  phase_1_prepare:
+    mode: RESEARCHER
+    tasks:
+      - Gather latest documentation
+      - Find practical examples
+      - Collect common pitfalls
+      - Research best practices
+      - Prepare visual aids/diagrams
+    output: Teaching content package
+
+  phase_2_teach:
+    mode: PROFESSOR
+    tasks:
+      - Explain concept with analogies
+      - Show practical examples
+      - Demonstrate with code
+      - Interactive Q&A
+      - Hands-on exercise
+    output: Lesson delivered
+
+  phase_3_deepen:
+    mode: PROFESSOR
+    tasks:
+      - Real-world use cases
+      - Advanced patterns introduction
+      - Comparison with alternatives
+      - Performance considerations
+      - When NOT to use
+    output: Comprehensive understanding
+
+  phase_4_mentor:
+    mode: MENTOR
+    tasks:
+      - Personalized action items
+      - Next steps for practice
+      - Resources for deeper learning
+      - Connect to user's project
+    output: Learning path defined
+
+output:
+  - Lesson notes (Obsidian)
+  - Code examples (Obsidian)
+  - Practice exercises (Obsidian)
+  - Learning path (Obsidian)
+
+obsidian_sync:
+  notes: 00-PROFESSOR/lessons/
+  examples: 00-PROFESSOR/examples/
+  path: 00-MENTOR/learning/
