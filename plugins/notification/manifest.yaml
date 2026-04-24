@@ -1,0 +1,33 @@
+name: notification
+version: 1.0.0
+type: plugin
+description: Multi-channel notification system for Delegado OS
+author: Delegado OS Team
+
+hooks:
+  on_session_complete:
+    script: hooks/on_session_complete.sh
+  on_milestone_reached:
+    script: hooks/on_milestone_reached.sh
+  on_error:
+    script: hooks/on_error.sh
+  on_deployment:
+    script: hooks/on_deployment.sh
+
+config:
+  enabled: true
+  channels:
+    - telegram
+    - email
+    - slack
+  telegram_bot_token: "${TELEGRAM_BOT_TOKEN}"
+  telegram_chat_id: "${TELEGRAM_CHAT_ID}"
+  email_from: "${EMAIL_FROM:-noreply@delegado.os}"
+  email_to: "${EMAIL_TO}"
+  slack_webhook: "${SLACK_WEBHOOK}"
+
+templates:
+  session_complete: "✅ Session {mode} completed in {duration}"
+  milestone_reached: "🎯 Milestone reached: {milestone}"
+  error: "❌ Error in {mode}: {error}"
+  deployment: "🚀 Deployed: {artifact} to {environment}"

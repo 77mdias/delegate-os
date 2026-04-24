@@ -1,0 +1,26 @@
+name: backup
+version: 1.0.0
+type: plugin
+description: Automated backup system for Delegado OS
+author: Delegado OS Team
+
+hooks:
+  daily:
+    script: hooks/daily_backup.sh
+  on_demand:
+    script: hooks/backup.sh
+
+config:
+  enabled: true
+  backup_path: ~/.delegado/backups
+  retention_days: 30
+  compress: true
+  include:
+    - .delegado/
+    - subagents/
+    - configs/
+    - plugins/
+  exclude:
+    - "*.log"
+    - ".git"
+    - "node_modules/"

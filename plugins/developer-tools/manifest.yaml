@@ -1,0 +1,20 @@
+name: developer-tools
+version: 1.0.0
+type: plugin
+description: Development productivity tools for Delegado OS
+author: Delegado OS Team
+
+hooks:
+  on_commit:
+    script: hooks/on_commit.sh
+  on_code_generated:
+    script: hooks/on_code_generated.sh
+
+config:
+  enabled: true
+  auto_lint: true
+  auto_format: true
+  pre_commit_checks:
+    - lint
+    - format
+    - type-check
