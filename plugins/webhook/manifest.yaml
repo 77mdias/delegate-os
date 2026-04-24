@@ -1,0 +1,21 @@
+name: webhook
+version: 1.0.0
+type: plugin
+description: Webhook integration for external system notifications
+author: Delegado OS Team
+
+hooks:
+  on_event:
+    script: hooks/on_event.sh
+
+config:
+  enabled: true
+  endpoints:
+    - url: "${WEBHOOK_URL_1}"
+      events: [session_complete, milestone_reached]
+      secret: "${WEBHOOK_SECRET_1}"
+    - url: "${WEBHOOK_URL_2}"
+      events: [error, deployment]
+      secret: "${WEBHOOK_SECRET_2}"
+  retry_count: 3
+  timeout_seconds: 10
