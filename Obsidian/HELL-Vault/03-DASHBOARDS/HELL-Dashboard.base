@@ -1,0 +1,128 @@
+# HELL Project Dashboard Base
+# Place in 03-DASHBOARDS/ folder as HELL-Dashboard.base
+
+filters:
+  and:
+    - file.hasTag("hell")
+
+formulas:
+  gate_icon: 'if(HELL_Gate == "PASSED", "✅", if(HELL_Gate == "BLOCKED", "❌", "⏳"))'
+  status_icon: 'if(Status == "🔥 ACTIVE", "🔥", if(Status == "✅ DONE", "✅", if(Status == "❌ BLOCKED", "❌", "⏸")))'
+  phase_order: 'if(HELL_Phase == "TDD", 1, if(HELL_Phase == "Refactor", 2, if(HELL_Phase == "Evolution", 3, 0)))'
+  days_since_created: 'if(Created, (now() - date(Created)).days, "")'
+  debt_severity: 'if(Tech_Debt == "critical", 4, if(Tech_Debt == "major", 3, if(Tech_Debt == "minor", 2, if(Tech_Debt == "none", 0, 1))))'
+  coverage_color: 'if(Coverage >= 80, "🟢", if(Coverage >= 50, "🟡", "🔴"))'
+  is_overdue: 'if(HELL_Gate == "PENDING" && date(Created) < today() - "7d", true, false)'
+  type_icon: 'if(Type == "spec", "📋", if(Type == "tdd", "🧪", if(Type == "refactor", "🔄", if(Type == "decision", "⚖️", if(Type == "debt", "💀", "📝")))))'
+
+properties:
+  Project:
+    displayName: Project
+  Module:
+    displayName: Module
+  Type:
+    displayName: Type
+  formula.type_icon:
+    displayName: ""
+  HELL_Phase:
+    displayName: Phase
+  HELL_Gate:
+    displayName: Gate
+  formula.gate_icon:
+    displayName: ""
+  Status:
+    displayName: Status
+  formula.status_icon:
+    displayName: ""
+  Patterns_GoF:
+    displayName: GoF Patterns
+  Coverage:
+    displayName: Cov%
+  formula.coverage_color:
+    displayName: ""
+  Tech_Debt:
+    displayName: Debt
+  formula.debt_severity:
+    displayName: Debt Level
+  formula.days_since_created:
+    displayName: Days Old
+  formula.is_overdue:
+    displayName: Overdue?
+  Created:
+    displayName: Created
+
+views:
+  - type: table
+    name: "🔥 Active Work"
+    filters:
+      and:
+        - 'Status == "🔥 ACTIVE"'
+    order:
+      - formula.status_icon
+      - Project
+      - HELL_Phase
+      - formula.type_icon
+      - Module
+      - formula.gate_icon
+      - HELL_Gate
+    groupBy:
+      property: Project
+      direction: ASC
+
+  - type: cards
+    name: "By Project"
+    order:
+      - formula.type_icon
+      - file.name
+      - Module
+      - HELL_Phase
+      - formula.coverage_color
+      - Coverage
+      - Status
+    groupBy:
+      property: Project
+      direction: ASC
+
+  - type: table
+    name: "Tech Debt"
+    filters:
+      and:
+        - 'Tech_Debt != "none"'
+    order:
+      - Project
+      - formula.debt_severity
+      - Tech_Debt
+      - Module
+
+  - type: table
+    name: "TDD Coverage"
+    filters:
+      and:
+        - 'Type == "tdd"'
+        - 'Coverage > 0'
+    order:
+      - formula.coverage_color
+      - Coverage
+      - Project
+      - Module
+
+  - type: table
+    name: "Gate Status"
+    filters:
+      and:
+        - 'HELL_Gate != "PASSED"'
+    order:
+      - formula.gate_icon
+      - Project
+      - HELL_Phase
+      - HELL_Gate
+
+  - type: table
+    name: "Recent"
+    limit: 20
+    order:
+      - file.mtime
+      - file.name
+    groupBy:
+      property: Type
+      direction: DESC
