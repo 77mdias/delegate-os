@@ -270,3 +270,20 @@ delegado detectar
 ## License
 
 MIT
+---
+
+## 🎭 Agent Modes
+
+Delegado OS includes 7 specialized agent modes:
+
+| Mode | Trigger | Purpose |
+|------|---------|---------|
+| **PROFESSOR** 👨‍🏫 | `ensinar`, `aprender` | Teaching & documentation |
+| **ARCHITECT** 🏛️ | `pattern`, `design` | System architecture |
+| **DEBUGGER** 🐛 | `bug`, `erro` | Bug analysis |
+| **GUARDIAN** 🛡️ | `segurança`, `auth` | Security audits |
+| **RESEARCHER** 📡 | `comparar`, `biblioteca` | Technology research |
+| **MENTOR** 🌱 | `carreira`, `crescer` | Career development |
+| **CONSULTANT** 💼 | `sugerir`, `decisão` | Strategic advice |
+
+See [AGENT-MODES.md](AGENT-MODES.md) for full documentation.
