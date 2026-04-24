@@ -1,0 +1,43 @@
+name: test-generator
+version: 1.0.0
+description: Generate tests based on code analysis, spec files, and existing implementations
+author: Delegado OS Team
+category: testing
+dependencies:
+  - bash
+  - jq
+  - tree-sitter (optional, for AST parsing)
+permissions:
+  - filesystem
+  - subprocess
+hooks:
+  pre_execute: scripts/validate_code.sh
+  post_execute: scripts/log_test_generation.sh
+capabilities:
+  - test_generation
+  - spec_based_testing
+  - code_analysis
+  - mock_generation
+  - fixture_creation
+  - coverage_analysis
+supported_languages:
+  - javascript
+  - typescript
+  - python
+  - bash
+  - go
+  - rust
+  - java
+supported_test_frameworks:
+  - jest
+  - mocha
+  - pytest
+  - unittest
+  - golang testing
+  - rust testing
+  - junit
+configuration:
+  default_framework: jest
+  generate_mocks: true
+  generate_fixtures: true
+  min_coverage_target: 80

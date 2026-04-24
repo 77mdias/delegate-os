@@ -1,0 +1,28 @@
+name: api-integration
+version: 1.0.0
+description: Handle API integrations, webhooks, and external service communication
+author: Delegado OS Team
+category: integration
+dependencies: []
+permissions:
+  - network
+  - filesystem
+hooks:
+  pre_execute: scripts/validate_api_config.sh
+  post_execute: scripts/log_api_call.sh
+capabilities:
+  - webhook_handler
+  - api_testing
+  - endpoint_discovery
+  - rate_limiting
+  - retry_logic
+  - auth_management
+configuration:
+  timeout: 30
+  retry_attempts: 3
+  rate_limit_per_minute: 60
+  supported_auth:
+    - bearer
+    - api_key
+    - oauth2
+    - basic

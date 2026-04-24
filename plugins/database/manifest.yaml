@@ -1,0 +1,33 @@
+name: database
+version: 1.0.0
+description: Database operations, migrations, query optimization, and schema management
+author: Delegado OS Team
+category: data
+dependencies:
+  - bash
+  - jq
+  - psql (PostgreSQL) OR mysql (MySQL)
+permissions:
+  - filesystem
+  - database
+hooks:
+  pre_execute: scripts/validate_schema.sh
+  post_execute: scripts/log_query.sh
+capabilities:
+  - migration_helper
+  - query_optimizer
+  - schema_diff
+  - data_validation
+  - backup_restore
+  - index_analysis
+supported_databases:
+  - postgresql
+  - mysql
+  - sqlite
+  - mongodb
+configuration:
+  default_timeout: 30
+  max_connections: 10
+  query_cache_size: 100
+  log_slow_queries: true
+  slow_query_threshold_ms: 1000
