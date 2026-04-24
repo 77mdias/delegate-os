@@ -1,0 +1,34 @@
+# CODEOWNERS
+
+# Default owners for everything
+*       @delegado-os/maintainers
+
+# Agent modes
+/subagents/PROFESSOR/    @delegado-os/professor-mode
+/subagents/ARCHITECT/    @delegado-os/architect-mode
+/subagents/DEBUGGER/     @delegado-os/debugger-mode
+/subagents/GUARDIAN/     @delegado-os/guardian-mode
+/subagents/RESEARCHER/   @delegado-os/researcher-mode
+/subagents/MENTOR/       @delegado-os/mentor-mode
+/subagents/CONSULTANT/   @delegado-os/consultant-mode
+/subagents/ORCHESTRATION/ @delegado-os/orchestration-mode
+
+# Plugins
+/plugins/                @delegado-os/plugins
+/plugins/cicd/          @delegado-os/devops
+/plugins/monitoring/     @delegado-ops/infra
+/plugins/backup/         @delegado-os/infra
+
+# Documentation
+/docs/                   @delegado-os/docs
+*.md                     @delegado-os/docs
+
+# Scripts
+/scripts/                @delegado-os/core
+/scripts/hooks.d/        @delegado-os/core
+
+# Workflows
+/workflows/              @delegado-os/core
+
+# Configuration
+.github/                 @delegado-os/maintainers
