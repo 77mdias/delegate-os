@@ -248,7 +248,7 @@ find_missing_indexes() {
         indexes+=("Consider index on ORDER BY column: $col")
     done
     
-    echo "$indexes[@]"
+    echo "${indexes[@]}"
 }
 
 # Generate optimization suggestions
@@ -292,7 +292,7 @@ generate_suggestions() {
         suggestions+=("Subquery in WHERE clause. Consider rewriting as JOIN for better performance.")
     fi
     
-    echo "$suggestions[@]"
+    echo "${suggestions[@]}"
 }
 
 # Show explain plan

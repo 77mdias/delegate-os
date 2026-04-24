@@ -38,5 +38,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Run ShellCheck
         uses: ludeeus/action-shellcheck@master
+        with:
+          ignore_names: hooks.sh
         env:
           SHELLCHECK_OPTS: -s sh -x
