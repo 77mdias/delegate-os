@@ -1,0 +1,29 @@
+name: cache
+version: 1.0.0
+type: plugin
+description: Caching layer for Delegado OS to improve performance
+author: Delegado OS Team
+
+hooks:
+  pre_cache_read:
+    script: hooks/pre_cache_read.sh
+  post_cache_write:
+    script: hooks/post_cache_write.sh
+  on_cache_invalidate:
+    script: hooks/on_cache_invalidate.sh
+
+config:
+  enabled: true
+  backend: memory  # memory, redis, memcached
+  ttl_seconds: 3600
+  max_size_mb: 512
+  redis:
+    url: redis://localhost:6379
+    db: 0
+  memory:
+    max_entries: 10000
+  cache_keys:
+    - mode_output
+    - search_results
+    - doc_content
+    - api_responses

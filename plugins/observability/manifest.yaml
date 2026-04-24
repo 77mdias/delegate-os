@@ -1,0 +1,28 @@
+name: observability
+version: 1.0.0
+type: plugin
+description: Observability stack for Delegado OS (metrics, logs, traces)
+author: Delegado OS Team
+
+hooks:
+  pre_observation_start:
+    script: hooks/pre_observation_start.sh
+  post_observation_stop:
+    script: hooks/post_observation_stop.sh
+  on_metric:
+    script: hooks/on_metric.sh
+
+config:
+  enabled: false
+  metrics:
+    enabled: true
+    port: 9090
+    path: /metrics
+  logs:
+    level: info
+    format: json
+    output: stdout
+  traces:
+    enabled: false
+    endpoint: http://jaeger:14268
+    sample_rate: 0.1

@@ -1,0 +1,19 @@
+name: multi-agent
+version: 1.0.0
+type: plugin
+description: Multi-agent coordination and delegation for Delegado OS
+author: Delegado OS Team
+
+hooks:
+  pre_delegation:
+    script: hooks/pre_delegation.sh
+  post_delegation:
+    script: hooks/post_delegation.sh
+  on_conflict:
+    script: hooks/on_conflict.sh
+
+config:
+  max_agents: 5
+  timeout_seconds: 3600
+  consensus_threshold: 0.7
+  conflict_resolution: vote  # vote, priority, round_robin

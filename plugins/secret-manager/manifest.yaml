@@ -1,0 +1,27 @@
+name: secret-manager
+version: 1.0.0
+type: plugin
+description: Secret management integration (Vault, AWS Secrets Manager, etc.)
+author: Delegado OS Team
+
+hooks:
+  pre_secret_access:
+    script: hooks/pre_secret_access.sh
+  post_secret_access:
+    script: hooks/post_secret_access.sh
+
+config:
+  provider: env  # env, vault, aws, gcp
+  vault:
+    address: http://vault:8200
+    auth_method: token
+    token_env: VAULT_TOKEN
+    paths:
+      - secret/data/delegado-os
+  aws:
+    region: us-east-1
+    profile: default
+    prefix: delegado-os
+  encryption:
+    algorithm: AES-256-GCM
+    key_env: DELEGADO_MASTER_KEY
