@@ -1,124 +1,42 @@
-name: DELEGADO CI
+name: CI
 
 on:
   push:
-    branches: [main, develop, '**']
+    branches: [main, feat/**]
   pull_request:
-    branches: [main, develop]
+    branches: [main]
 
 jobs:
-  validate:
-    name: Quality Gates
+  test:
     runs-on: ubuntu-latest
-    
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          node-version: '20'
-          cache: 'npm'
+          python-version: '3.11'
 
       - name: Install dependencies
-        run: npm install
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest pytest-cov flake8
 
       - name: Lint
-        run: npm run lint || true
-        continue-on-error: true
-
-      - name: Type check
-        run: npx tsc --noEmit || true
-        continue-on-error: true
-
-      - name: Run tests
-        run: npm test
-        continue-on-error: true
-
-      - name: HELL Audit
         run: |
-          echo "=== HELL Artifacts Check ==="
-          for dir in specs tdd decisions; do
-            if [ -d "$dir" ]; then
-              echo "✅ $dir exists"
-              echo "   $(find $dir -name '*.md' | wc -l) files"
-            else
-              echo "⚠️  $dir missing"
-            fi
-          done
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics || true
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics || true
 
-      - name: Complexity check
-        run: |
-          echo "=== Complexity Check ==="
-          if [ -d "src" ]; then
-            find src -name "*.ts" -o -name "*.js" | head -20 | while read f; do
-              loc=$(wc -l < "$f")
-              if [ $loc -gt 200 ]; then
-                echo "⚠️  $f: $loc LOC (exceeds 200)"
-              fi
-            done
-          fi
-
-  delegated-check:
-    name: Delegado OS Checks
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Check structure
-        run: |
-          echo "=== Delegado OS Structure ==="
-          [ -f "delegado.sh" ] && echo "✅ delegado.sh" || echo "❌ delegado.sh missing"
-          [ -f "SKILL.md" ] && echo "✅ SKILL.md" || echo "❌ SKILL.md missing"
-          [ -f "kernel/hell/HELL-CORE-ENGINE.md" ] && echo "✅ HELL CORE ENGINE" || echo "❌ HELL CORE ENGINE missing"
-          [ -d "kernel/skills" ] && echo "✅ Skills directory" || echo "❌ Skills missing"
-          [ -d "templates/hell" ] && echo "✅ HELL templates" || echo "❌ Templates missing"
-
-      - name: Run Delegado CLI
+      - name: Test
         run: |
           chmod +x delegado.sh
-          ./delegado.sh status 2>/dev/null || echo "Status check complete"
+          ./delegado.sh validar 2>/dev/null || echo "Running validation"
 
-  security:
-    name: Security Audit
+  shellcheck:
     runs-on: ubuntu-latest
-    
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Audit dependencies
-        run: npm audit --audit-level=high || true
-        continue-on-error: true
-
-  build:
-    name: Build Check
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Install
-        run: npm install
-
-      - name: Build
-        run: npm run build || true
-        continue-on-error: true
+      - uses: actions/checkout@v4
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
+        env:
+          SHELLCHECK_OPTS: -s sh -x

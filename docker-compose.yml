@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  delegado-os:
+    build: .
+    container_name: delegado-os
+    volumes:
+      - ./:/app
+      - delegado-data:/app/memory
+      - delegado-config:/app/config
+    environment:
+      - DELEGADO_MODE=auto
+      - DELEGADO_KERNEL_PATH=/app/kernel
+      - DELEGADO_WORKFLOWS_PATH=/app/workflows
+      - DELEGADO_MEMORY_PATH=/app/memory
+    working_dir: /app
+    stdin_open: true
+    tty: true
+    networks:
+      - delegado-net
+
+  obsidian:
+    image: ghcr.io/obsidianmd/obsidian:latest
+    container_name: delegado-obsidian
+    volumes:
+      - ./Obsidian:/vault
+      - obsidian-data:/vault/.obsidian
+    environment:
+      - OBSIDIAN_VAULT_PATH=/vault
+    ports:
+      - "8080:8080"
+    networks:
+      - delegado-net
+    depends_on:
+      - delegado-os
+
+volumes:
+  delegado-data:
+  delegado-config:
+  obsidian-data:
+
+networks:
+  delegado-net:
+    driver: bridge
