@@ -1,18 +1,18 @@
 #!/usr/bin/env node
-#===============================================================================
-# HELL CYCLE AUTOMATION — Node.js Script
-#===============================================================================
-#
-# Automates HELL method cycles with TDD, pattern detection, and commit hooks.
-#
-# Usage:
-#   node hell-cycle.js spec <module>     # Create spec
-#   node hell-cycle.js tdd <module>       # Run TDD cycle
-#   node hell-cycle.js refactor <module>  # Apply refactor
-#   node hell-cycle.js audit <module>     # Run audit
-#   node hell-cycle.js milestone <type>   # Run milestone gate
-#
-#===============================================================================
+//===============================================================================
+// HELL CYCLE AUTOMATION — Node.js Script
+//===============================================================================
+//
+// Automates HELL method cycles with TDD, pattern detection, and commit hooks.
+//
+// Usage:
+//   node hell-cycle.js spec <module>     # Create spec
+//   node hell-cycle.js tdd <module>       # Run TDD cycle
+//   node hell-cycle.js refactor <module>  # Apply refactor
+//   node hell-cycle.js audit <module>     # Run audit
+//   node hell-cycle.js milestone <type>   # Run milestone gate
+//
+//===============================================================================
 
 const fs = require('fs');
 const path = require('path');
