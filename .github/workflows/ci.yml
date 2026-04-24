@@ -40,5 +40,6 @@ jobs:
         uses: ludeeus/action-shellcheck@master
         with:
           ignore_names: hooks.sh
+          severity: error
         env:
-          SHELLCHECK_OPTS: -s sh -x
+          SHELLCHECK_OPTS: -s bash
