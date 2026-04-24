@@ -627,7 +627,191 @@ MODE ACTIVATOR → Load SKILL.md + Context + Execute + Sync Obsidian
 
 ---
 
-## 14. SUPER-AGENT ORCHESTRATION
+## 15. ADVANCED PROMPT ENGINEERING
+
+Delegado OS incorporates state-of-the-art prompting techniques:
+
+### 15.1 Chain-of-Thought (CoT) Prompting
+
+```yaml
+# Activated when: Complex reasoning, multi-step problems
+# Mechanism: Agent shows reasoning steps before final answer
+
+Trigger: "let's think step by step", "reasoning", "analysis"
+
+Template:
+"""
+Question: {problem}
+
+Let's think step by step:
+1. [First reasoning step]
+2. [Second reasoning step]
+3. [Continue until solution]
+
+Answer: [Final answer]
+"""
+
+# Agent Internal Format:
+THOUGHT: I need to... [Reasoning]
+ACTION: [Tool/API call]
+OBSERVATION: [Result]
+THOUGHT: Based on observation... [Next reasoning]
+...repeat until complete...
+FINAL_ANSWER: [Conclusion]
+```
+
+### 15.2 Tree of Thoughts (ToT)
+
+```yaml
+# Activated when: Complex decisions with multiple paths
+# Mechanism: Explore parallel reasoning branches
+
+Template:
+"""
+Imagine three experts exploring different paths:
+
+EXPERT 1 (Path A):
+- Step: [Reasoning path A]
+- Evaluation: [Pros/Cons]
+- Confidence: [0-100%]
+
+EXPERT 2 (Path B):
+- Step: [Reasoning path B]
+- Evaluation: [Pros/Cons]
+- Confidence: [0-100%]
+
+EXPERT 3 (Path C):
+- Step: [Reasoning path C]
+- Evaluation: [Pros/Cons]
+- Confidence: [0-100%]
+
+CONVERGENCE: [Which path wins or combination]
+"""
+```
+
+### 15.3 ReAct (Reasoning + Acting)
+
+```yaml
+# Activated when: Need external information + reasoning
+# Mechanism: Think → Act → Observe → Repeat
+
+Agent Loop:
+THOUGHT: What I need to figure out...
+ACTION: [tool_name]
+ACTION_INPUT: {parameters}
+OBSERVATION: [result]
+THOUGHT: Based on observation... [Continue or conclude]
+
+# Tools in ReAct:
+- Search: Web search for facts
+- Calculator: Math operations
+- CodeRunner: Execute code
+- FileReader: Read files
+- Memory: Access context/memory
+```
+
+### 15.4 Self-Consistency (Ensemble Reasoning)
+
+```yaml
+# Activated when: Need high confidence answers
+# Mechanism: Multiple reasoning paths, vote on consensus
+
+Template:
+"""
+Solve this problem in multiple ways:
+
+Path 1: [Reasoning method A]
+→ Answer: [A1]
+
+Path 2: [Reasoning method B]
+→ Answer: [A2]
+
+Path 3: [Reasoning method C]
+→ Answer: [A3]
+
+CONSENSUS: Most common answer is [X]
+CONFIDENCE: [Count agreeing] / [Total paths]
+"""
+```
+
+### 15.5 Prompt Chaining
+
+```yaml
+# Activated when: Multi-stage tasks
+# Mechanism: Output of one step becomes input of next
+
+STAGE 1: Extract
+Output: Structured data from input
+
+STAGE 2: Transform
+Input: STAGE 1 output
+Output: Processed/filtered data
+
+STAGE 3: Generate
+Input: STAGE 2 output
+Output: Final deliverable
+
+# Each stage is a separate agent or prompt
+```
+
+### 15.6 Few-Shot with Examples
+
+```yaml
+# Activated when: Teaching new patterns/tasks
+# Mechanism: Provide 2-5 examples of desired behavior
+
+Template:
+"""
+Example 1:
+Input: {example_input_1}
+Output: {example_output_1}
+
+Example 2:
+Input: {example_input_2}
+Output: {example_output_2}
+
+Example 3:
+Input: {example_input_3}
+Output: {example_output_3}
+
+Now solve:
+Input: {new_input}
+Output: [Apply pattern from examples]
+"""
+```
+
+### 15.7 Mode-Specific Prompt Activation
+
+| Situation | Technique | Activation |
+|-----------|-----------|------------|
+| Bug debugging | ReAct | "Let's debug this step by step" |
+| Teaching concept | Chain-of-Thought + Few-Shot | "Let me explain by showing" |
+| Design decisions | Tree of Thoughts | "Consider multiple approaches" |
+| Code generation | Few-Shot + Chain | "Here's a similar example" |
+| Research | ReAct + Self-Consistency | "Search and verify" |
+| Security audit | ReAct | "Think like an attacker" |
+
+### 15.8 Meta-Prompt Injection
+
+```yaml
+# Self-improving prompts embedded in agent output
+
+OUTPUT_PREFIX: |
+  [AGENT OUTPUT]
+  
+  ---
+  SELF-EVALUATION:
+  - Clarity: [1-5] [Optional improvement]
+  - Completeness: [1-5] [Optional improvement]
+  - Correctness: [1-5] [Optional improvement]
+  
+  REFINED_PROMPT_FOR_NEXT: |
+    [If score < 5, here's an improved prompt]
+```
+
+---
+
+## 16. SUPER-AGENT ORCHESTRATION
 
 For multi-agent systems (OpenClaw Noir, Hermes, Claude Code, Codex):
 
