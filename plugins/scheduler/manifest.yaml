@@ -1,0 +1,25 @@
+name: scheduler
+version: 1.0.0
+type: plugin
+description: Scheduled task execution for Delegado OS
+author: Delegado OS Team
+
+hooks:
+  scheduled:
+    script: hooks/scheduled.sh
+
+config:
+  enabled: true
+  schedules:
+    - name: daily_backup
+      cron: "0 2 * * *"
+      command: "backup:daily"
+    - name: weekly_report
+      cron: "0 9 * * 1"
+      command: "analytics:weekly"
+    - name: monthly_cleanup
+      cron: "0 3 1 * *"
+      command: "cleanup:monthly"
+    - name: health_check
+      cron: "*/15 * * * *"
+      command: "health:check"

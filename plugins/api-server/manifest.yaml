@@ -1,0 +1,24 @@
+name: api-server
+version: 1.0.0
+type: plugin
+description: REST API server for programmatic Delegado OS access
+author: Delegado OS Team
+
+hooks:
+  pre_server_start:
+    script: hooks/pre_server_start.sh
+  post_server_stop:
+    script: hooks/post_server_stop.sh
+
+config:
+  enabled: false
+  host: 0.0.0.0
+  port: 8080
+  workers: 4
+  auth:
+    type: bearer
+    token_env: DELEGADO_API_TOKEN
+  cors:
+    enabled: true
+    origins:
+      - http://localhost:3000
