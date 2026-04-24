@@ -576,7 +576,58 @@ The CLI Agent should show command suggestions when:
 *This is the intelligence layer. HELL is the center. Obsidian is the brain. Automation is the key.*
 ---
 
-## 13. SUPER-AGENT ORCHESTRATION
+## 13. AGENT MODES SYSTEM
+
+Delegado OS includes 7 specialized agent modes for different contexts:
+
+### Mode Overview
+
+| Mode | Trigger Keywords | Obsidian Vault | Primary Use |
+|------|------------------|-----------------|-------------|
+| **PROFESSOR** 👨‍🏫 | ensinar, aprender, tutorial, como funciona | `vault/10-EDUCATION/` | Teaching & documentation |
+| **ARCHITECT** 🏛️ | arquitetura, pattern, design, grasp, gof | `vault/20-ARCHITECTURE/` | System design |
+| **DEBUGGER** 🐛 | bug, erro, falha, crash, não funciona | `vault/30-BUGS/` | Root cause analysis |
+| **GUARDIAN** 🛡️ | segurança, vulnerabilidade, auth, inject | `vault/40-SECURITY/` | Security audits |
+| **RESEARCHER** 📡 | biblioteca, package, comparar, alternativa | `vault/50-RESEARCH/` | Tech research |
+| **MENTOR** 🌱 | carreira, crescer, senior, promoção | `vault/60-CAREER/` | Career development |
+| **CONSULTANT** 💼 | consultar, sugestão, melhor prática | `vault/70-CONSULTING/` | Strategic advice |
+
+### Mode Selection Flow
+
+```
+USER INPUT
+    │
+    ▼
+CONTEXT SCANNER → Extract: Keywords, Stack, Intent, Complexity
+    │
+    ▼
+MODE MATCHER → Score each mode (0.0 - 1.0)
+    │
+    ▼
+MODE RESOLVER → If ambiguous → Ask user | If clear → Activate mode
+    │
+    ▼
+MODE ACTIVATOR → Load SKILL.md + Context + Execute + Sync Obsidian
+```
+
+### Mode Commands
+
+```bash
+/delegado professor [topic]     # Teach a topic
+/delegado architect [module]     # Design architecture
+/delegado debugger analyze       # Analyze bug
+/delegado guardian audit [scope] # Security audit
+/delegado researcher compare     # Compare packages
+/delegado mentor path [goal]     # Career path
+/delegado consultant advise     # Strategic advice
+/delegado modes                  # List all modes
+```
+
+→ Full documentation: `AGENT-MODES.md`
+
+---
+
+## 14. SUPER-AGENT ORCHESTRATION
 
 For multi-agent systems (OpenClaw Noir, Hermes, Claude Code, Codex):
 
@@ -585,6 +636,7 @@ For multi-agent systems (OpenClaw Noir, Hermes, Claude Code, Codex):
 | Role | Responsibility |
 |------|----------------|
 | Context Owner | Maintains shared context, delegates tasks |
+| Mode Orchestrator | Routes to appropriate agent mode |
 | HELL Orchestrator | Routes HELL phases to appropriate agents |
 | Memory Authority | Updates MEMORY.md and Obsidian vault |
 | Quality Gate | Validates milestone completion |
@@ -592,7 +644,16 @@ For multi-agent systems (OpenClaw Noir, Hermes, Claude Code, Codex):
 ### Sub-Agent Spawning Pattern
 
 ```yaml
-Spawn for HELL Phase:
+For Agent Modes:
+  PROFESSOR  → Spawn: Teaching sub-agent
+  ARCHITECT  → Spawn: Design sub-agent
+  DEBUGGER   → Spawn: Analysis sub-agent
+  GUARDIAN   → Spawn: Security sub-agent
+  RESEARCHER → Spawn: Research sub-agent
+  MENTOR     → Spawn: Career sub-agent
+  CONSULTANT → Spawn: Advisory sub-agent
+
+For HELL Phase:
   SPEC     → Spawn: Analyst Agent
   TDD      → Spawn: Coder Agent
   REFACTOR → Spawn: Review Agent
@@ -607,12 +668,27 @@ Event_Bus_Topics:
   - hell.phase.started     # Phase began
   - hell.phase.completed   # Phase finished
   - hell.gate.passed       # Milestone achieved
+  - mode.activated          # Agent mode activated
+  - mode.completed          # Agent mode finished
   - memory.updated          # Memory changed
   - task.delegated         # Work assigned
   - context.changed         # Project context updated
 ```
 
+### Mode Orchestrator (Automatic Selection)
+
+```bash
+# Auto-detect mode from input
+./scripts/mode_selector.sh "me ensina TDD"
+# Output: Detected Mode: PROFESSOR
+
+# With Context7 integration
+./scripts/context7_search.sh "flutter state management" --lang=flutter
+```
+
 → Full protocol: `docs/super-agents/SUPER-AGENTS-INTEGRATION.md`
+→ Mode orchestrator: `MODE-ORCHESTRATOR.md`
+→ Hooks system: `scripts/hooks.sh`
 
 ---
 
