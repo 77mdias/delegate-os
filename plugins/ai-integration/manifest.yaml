@@ -1,0 +1,81 @@
+name: ai-integration
+version: 1.0.0
+type: plugin
+description: Unified AI integration plugin supporting multiple LLM providers (OpenAI, Anthropic, local models)
+author: Delegado OS Team
+license: MIT
+
+hooks:
+  on_llm_request:
+    script: hooks/on_llm_request.sh
+  on_llm_response:
+    script: hooks/on_llm_response.sh
+  on_model_switch:
+    script: hooks/on_model_switch.sh
+
+config:
+  enabled: true
+  default_provider: openai
+  providers:
+    openai:
+      name: OpenAI
+      models:
+        - gpt-4o
+        - gpt-4o-mini
+        - gpt-4-turbo
+        - gpt-3.5-turbo
+      api_key_env: OPENAI_API_KEY
+      streaming: true
+    anthropic:
+      name: Anthropic
+      models:
+        - claude-sonnet-4
+        - claude-3-5-sonnet-latest
+        - claude-3-opus-latest
+        - claude-3-haiku-latest
+      api_key_env: ANTHROPIC_API_KEY
+      streaming: true
+    ollama:
+      name: Ollama (Local)
+      models:
+        - llama3.2
+        - mistral
+        - codellama
+        - phi3
+      base_url: http://localhost:11434
+      streaming: true
+    lmstudio:
+      name: LM Studio (Local)
+      models:
+        - local-model
+      base_url: http://localhost:1234/v1
+      api_key: not-required
+      streaming: true
+  fallback_chain:
+    - openai
+    - anthropic
+    - ollama
+  retry_attempts: 3
+  retry_delay: 1000
+  timeout_ms: 120000
+  cache_enabled: true
+  cache_ttl_seconds: 3600
+
+provider_configs:
+  openai:
+    organization_env: OPENAI_ORG_ID
+    max_retries: 3
+    default_temperature: 0.7
+    default_max_tokens: 4096
+  anthropic:
+    max_retries: 3
+    default_temperature: 0.7
+    default_max_tokens: 4096
+    beta_header: false
+  ollama:
+    request_timeout: 300
+    keep_alive: 5m
+  lmstudio:
+    request_timeout: 300
+    llm_endpoint: /v1/chat/completions
+    embedding_endpoint: /v1/embeddings

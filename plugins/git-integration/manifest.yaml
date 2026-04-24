@@ -1,0 +1,62 @@
+name: git-integration
+version: 1.0.0
+type: plugin
+description: Git operations automation and integration for Delegado OS
+author: Delegado OS Team
+license: MIT
+
+hooks:
+  pre_commit:
+    script: hooks/pre_commit.sh
+  post_commit:
+    script: hooks/post_commit.sh
+  pre_push:
+    script: hooks/pre_push.sh
+  post_push:
+    script: hooks/post_push.sh
+  pre_merge:
+    script: hooks/pre_merge.sh
+  post_merge:
+    script: hooks/post_merge.sh
+  on_branch_create:
+    script: hooks/on_branch_create.sh
+  on_branch_delete:
+    script: hooks/on_branch_delete.sh
+
+config:
+  enabled: true
+  auto_stage: true
+  commit_msg_template: "{{type}}: {{subject}}"
+  branch_prefixes:
+    - feat/
+    - fix/
+    - hotfix/
+    - docs/
+    - refactor/
+    - test/
+  require_branch_prefix: true
+  max_commit_subject_length: 72
+  sign_commits: false
+  auto_cleanup_branches: false
+  protected_branches:
+    - main
+    - master
+    - develop
+  commit_types:
+    - feat
+    - fix
+    - docs
+    - style
+    - refactor
+    - test
+    - chore
+    - perf
+    - ci
+    - revert
+
+git_config:
+  autocrlf: input
+  ignorecase: false
+  rebase.autostash: true
+  fetch_prune: true
+  push_default: current
