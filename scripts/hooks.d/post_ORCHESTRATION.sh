@@ -30,9 +30,9 @@ fi
 
 # Archive task results
 mkdir -p "$SESSION_DIR/tasks"
-for task_result in "$DELEGADO_HOME"/.delegado/tasks/*.md 2>/dev/null; do
+for task_result in "$DELEGADO_HOME"/.delegado/tasks/*.md; do
     [ -f "$task_result" ] && cp "$task_result" "$SESSION_DIR/tasks/"
-done
+done 2>/dev/null
 
 # Sync orchestration summary to Obsidian
 if [ -d "$OBSIDIAN_VAULT" ]; then
