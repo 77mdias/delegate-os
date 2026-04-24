@@ -1,0 +1,24 @@
+name: kubernetes
+version: 1.0.0
+type: plugin
+description: Kubernetes deployment and management for Delegado OS
+author: Delegado OS Team
+
+hooks:
+  pre_deploy:
+    script: hooks/pre_deploy.sh
+  post_deploy:
+    script: hooks/post_deploy.sh
+  on_scale:
+    script: hooks/on_scale.sh
+
+config:
+  enabled: false
+  context: default
+  namespace: delegado
+  replicas: 2
+  resources:
+    cpu_request: "100m"
+    cpu_limit: "500m"
+    memory_request: "256Mi"
+    memory_limit: "512Mi"
