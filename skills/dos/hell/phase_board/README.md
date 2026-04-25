@@ -11,7 +11,7 @@ Sistema central de revisão e organização documental para super agents.
 ## Estrutura
 
 ```
-skills/dos/hell/phase-board/
+skills/dos/hell/phase_board/
 ├── SKILL.md                      # Skill principal (workflow completo)
 ├── README.md                     # Este arquivo
 └── templates/
