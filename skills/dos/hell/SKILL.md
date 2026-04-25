@@ -1,7 +1,7 @@
 ---
 name: dos-hell
-description: "HELL Method — GRASP/GoF-driven development (Spec → TDD → Refactor → Evolve) + Review/Milestone control | /dos-hell [spec|tdd|refactor|evolve|review|audit|milestone|debt|status]"
-argument-hint: "[spec|tdd|refactor|evolve|review|audit|milestone|debt|status]"
+description: "HELL Method — GRASP/GoF-driven development (Spec → TDD → Refactor → Evolve) + Review/Milestone/Phase-Board control | /dos-hell [spec|tdd|refactor|evolve|review|audit|milestone|debt|status|phase-board]"
+argument-hint: "[spec|tdd|refactor|evolve|review|audit|milestone|debt|status|phase-board]"
 allowed-tools:
   - Read
   - Write
@@ -44,6 +44,7 @@ SPEC ──► TDD ──► REFACTOR ──► EVOLVE
 | /dos-hell:milestone | Milestone gate — checkpoint control in workflow |
 | /dos-hell:debt | Tech debt backlog and prioritization |
 | /dos-hell:status | HELL cycle status dashboard |
+| /dos-hell:phase-board | Document organization, gap finding, feature suggestions |
 
 ## Integration with BMAD/OpenSpec
 
@@ -70,6 +71,7 @@ Route to appropriate sub-skill based on argument:
 - milestone → /dos-hell:milestone (Milestone gate checkpoint)
 - debt → /dos-hell:debt (Tech debt backlog)
 - status → /dos-hell:status (Cycle status)
+- phase-board → /dos-hell:phase-board (Document org, gap finding, changelog)
 
 Or display this help if no argument.
 
