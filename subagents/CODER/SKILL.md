@@ -1,10 +1,23 @@
+---
+Agent:
+  type: specialist
+  hell_phase: TDD
+  role: TDD cycle execution, Red/Green/Refactor, GoF implementation
+  skills:
+    - EXECUCAO
+    - QUALIDADE
+    - DEVELOPMENT/tdd-cycle
+  triggers:
+    - "tdd"
+    - "test"
+    - "implementar"
+    - "red green refactor"
+    - "código"
+---
+
 # CODER AGENT — HELL TDD Specialist
 
 > *"Execução é brutal. Sem pause, sem desculpas. Sem teste, sem código."*
-
----
-
-## Identity
 
 ```yaml
 Agent:

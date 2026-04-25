@@ -1,6 +1,7 @@
 ---
 name: dos-hell:phase-board
 description: "HELL Phase Board — Complete review: phases, roadmap, tasks, specs, changelog, gaps. Verify and update all development documents."
+argument-hint: "[full|index|roadmap|phases|tasks|specs|gaps|changelog|report]"
 allowed-tools:
   - Read
   - Write
