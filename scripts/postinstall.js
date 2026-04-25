@@ -11,7 +11,7 @@
  *   ...etc
  */
 
-import { existsSync, symlinkSync, mkdirSync, readdirSync, statSync, rmSync, readlinkSync } from 'fs';
+import { existsSync, symlinkSync, mkdirSync, readdirSync, statSync, rmSync, readlinkSync, readFileSync, writeFileSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -19,9 +19,10 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // Detect supported AI agents and their skills directories
 const AGENTS = {
-  claude: { dir: '.claude/skills', name: 'Claude Code' },
-  codex: { dir: '.codex/skills', name: 'GitHub Codex' },
-  cursor: { dir: '.cursor/skills', name: 'Cursor' }
+  claude: { dir: '.claude/skills', name: 'Claude Code', type: 'symlink' },
+  codex: { dir: '.codex/skills', name: 'GitHub Codex', type: 'symlink' },
+  cursor: { dir: '.cursor/skills', name: 'Cursor', type: 'symlink' },
+  agents: { dir: '.agents/skills', name: 'Agents Marketplace', type: 'marketplace' }
 };
 
 function getHomeDir() {
@@ -58,6 +59,38 @@ function linkIfNotExists(source, target) {
   }
   try {
     symlinkSync(source, target);
+    return 'linked';
+  } catch (err) {
+    return 'error';
+  }
+}
+
+/**
+ * Add skill to .agents marketplace (.skill-lock.json)
+ */
+function addToMarketplaceLock(skillName, skillPath) {
+  const lockPath = join(getHomeDir(), '.agents', '.skill-lock.json');
+  if (!existsSync(lockPath)) {
+    console.log(`  ⚠ .skill-lock.json not found, skipping marketplace`);
+    return 'skip';
+  }
+
+  try {
+    const lockContent = readFileSync(lockPath, 'utf-8');
+    const lock = JSON.parse(lockContent);
+
+    if (!lock.skills) lock.skills = {};
+
+    lock.skills[skillName] = {
+      source: '77mdias/delegate-os',
+      sourceType: 'github',
+      sourceUrl: 'https://github.com/77mdias/delegate-os.git',
+      skillPath: skillPath,
+      installedAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
+    writeFileSync(lockPath, JSON.stringify(lock, null, 2));
     return 'linked';
   } catch (err) {
     return 'error';
@@ -154,21 +187,30 @@ function main() {
   console.log('\n📦 Individual skills (recursive):');
   if (existsSync(dosDir)) {
     const skills = discoverSkills(dosDir, 'dos');
-    
+
     for (const skill of skills) {
       for (const [key, agent] of Object.entries(AGENTS)) {
         const skillsDir = join(homeDir, agent.dir);
         if (existsSync(skillsDir)) {
-          const targetLink = join(skillsDir, skill.name);
-          const result = linkIfNotExists(skill.path, targetLink);
-          const icons = { linked: '✓', already_linked: '✓', exists_not_symlink: '⚠', error: '✗' };
-          if (result === 'linked') {
-            console.log(`  ${icons[result]} ${skill.name}`);
+          if (agent.type === 'marketplace') {
+            // For marketplace, add to .skill-lock.json instead of symlink
+            const skillPathInPackage = skill.path.replace(packagePath + '/', '');
+            const result = addToMarketplaceLock(skill.name, `${skillPathInPackage}/SKILL.md`);
+            if (result === 'linked') {
+              console.log(`  ✓ ${skill.name} (marketplace)`);
+            }
+          } else {
+            const targetLink = join(skillsDir, skill.name);
+            const result = linkIfNotExists(skill.path, targetLink);
+            const icons = { linked: '✓', already_linked: '✓', exists_not_symlink: '⚠', error: '✗' };
+            if (result === 'linked') {
+              console.log(`  ${icons[result]} ${skill.name}`);
+            }
           }
         }
       }
     }
-    
+
     console.log(`\n  Total: ${skills.length} skills discovered`);
   }
 
