@@ -1,6 +1,6 @@
 {
   "name": "@delegado/os-delegate",
-  "version": "2.0.10",
+  "version": "2.0.11",
   "description": "AI Agent OS — HELL-Centric Meta-Prompting with Autonomous CLI Agent",
   "type": "module",
   "main": "index.js",
