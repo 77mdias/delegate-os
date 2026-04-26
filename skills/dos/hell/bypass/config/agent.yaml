@@ -1,0 +1,131 @@
+# HELL Bypass Agent Configuration v2.0
+
+agent:
+  name: "HELL Bypass"
+  version: "2.0.0"
+  description: "Agente Autônomo HELL - Trabalha sozinho com todas as skills e ferramentas"
+  mode: "autonomous"  # autonomous | supervised | safe-mode
+
+# Discovery settings
+discovery:
+  auto-scan-skills: true
+  auto-detect-mcps: true
+  cache-discovery: true
+  scan-on-boot: true
+  include-hidden: false  # Don't scan .hidden directories
+
+# Execution settings
+execution:
+  checkpoint-on-dangerous: true
+  require-confirmation:
+    - "git push --force"
+    - "git push -f"
+    - "rm -rf"
+    - "drop database"
+    - "drop table"
+    - "truncate"
+  max-retries: 3
+  retry-delay: 2  # seconds
+  parallel-tasks: true
+  max-parallel: 3
+
+# Safety settings
+safety:
+  enable-checkpoints: true
+  enable-rollback: true
+  log-level: "info"  # debug | info | warn | error
+  backup-before-critical: true
+  max-checkpoints: 10
+  checkpoint-retention-days: 7
+  hooks-enabled: true
+
+# Reporting settings
+reporting:
+  report-progress: true
+  report-interval: 5  # minutes
+  verbose-output: true
+  structured-output: true
+  show-discovery: true
+  show-timing: true
+
+# Memory settings
+memory:
+  active-context: "memory/active-context.md"
+  execution-log: "logs/execution.log"
+  error-log: "logs/errors.log"
+  learned-patterns: "memory/learned-patterns.md"
+  update-on-completion: true
+  persist-session: true
+
+# Skill invocation
+skills:
+  preferred-order:
+    - "dos-hell"
+    - "superpowers"
+    - "gsd"
+    - "delegado"
+  fallback-to-direct: true
+  timeout: 300  # seconds
+  retry-on-fail: true
+
+# MCP settings
+mcp:
+  use-cache: true
+  timeout: 60  # seconds
+  preferred:
+    - "context7"  # Documentation lookup
+    - "playwright"  # E2E testing
+    - "serena"  # Code analysis
+
+# File patterns
+patterns:
+  # Priority files to check
+  priority:
+    - "CLAUDE.md"
+    - "README.md"
+    - "package.json"
+    - "config.yaml"
+
+  # Documentation
+  docs:
+    - "docs/**/*.md"
+    - "SPECS/**/*.md"
+    - "PHASES/**/*.md"
+
+  # Code
+  code:
+    extensions:
+      - "*.ts"
+      - "*.tsx"
+      - "*.js"
+      - "*.jsx"
+      - "*.py"
+      - "*.go"
+    exclude:
+      - "node_modules/**"
+      - "dist/**"
+      - "build/**"
+      - ".git/**"
+
+  # Dangerous patterns
+  dangerous:
+    - "rm -rf"
+    - "drop"
+    - "delete.*force"
+    - "reset --hard"
+
+# Environment
+environment:
+  project-root: "."
+  skills-dir: "skills"
+  docs-dir: "docs"
+  scripts-dir: "scripts"
+  memory-dir: "memory"
+  logs-dir: "logs"
+
+# Development
+development:
+  debug-mode: false
+  verbose-logging: false
+  trace-hooks: true
+  show-hooks-output: false

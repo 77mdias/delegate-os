@@ -1,7 +1,7 @@
 ---
 name: dos-hell
-description: "HELL Method — GRASP/GoF-driven development (Spec → TDD → Refactor → Evolve) + Review/Milestone/Phase-Board control | /dos-hell [spec|tdd|refactor|evolve|review|audit|milestone|debt|status|phase-board]"
-argument-hint: "[spec|tdd|refactor|evolve|review|audit|milestone|debt|status|phase-board]"
+description: "HELL Method — GRASP/GoF-driven development (Spec → TDD → Refactor → Evolve) + Review/Milestone/Phase-Board control + AUTONOMOUS BYPASS agent | /dos-hell [spec|tdd|refactor|evolve|review|audit|milestone|debt|status|phase-board|bypass]"
+argument-hint: "[spec|tdd|refactor|evolve|review|audit|milestone|debt|status|phase-board|bypass]"
 allowed-tools:
   - Read
   - Write
@@ -45,6 +45,7 @@ SPEC ──► TDD ──► REFACTOR ──► EVOLVE
 | /dos-hell:debt | Tech debt backlog and prioritization |
 | /dos-hell:status | HELL cycle status dashboard |
 | /dos-hell:phase-board | Document organization, gap finding, feature suggestions |
+| /dos-hell:bypass | 🤖 Agente autônomo completo — all-in-one: review, specs, phase-board, TDD, impl, tests, docs |
 
 ## Integration with BMAD/OpenSpec
 
@@ -72,6 +73,7 @@ Route to appropriate sub-skill based on argument:
 - debt → /dos-hell:debt (Tech debt backlog)
 - status → /dos-hell:status (Cycle status)
 - phase-board → /dos-hell:phase-board (Document org, gap finding, changelog)
+- bypass → /dos-hell:bypass (Agente autônomo completo - todas as skills, MCPs, scripts)
 
 Or display this help if no argument.
 

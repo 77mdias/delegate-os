@@ -1,7 +1,7 @@
 ---
 name: delegado-os
-description: "AI Agent OS — HELL-Centric Meta-Prompting with Autonomous CLI Agent | Full automation: skill auto-load, obsidian sync, pattern detection | /delegado [bmad|hell|hell:phase-board|propose|specs|design|tasks|apply|verify|context|memory|learn|feedback]"
-argument-hint: "[bmad|hell|hell:phase-board|propose|specs|design|tasks|apply|verify|context|memory|learn|feedback]"
+description: "AI Agent OS — HELL-Centric Meta-Prompting with Autonomous CLI Agent | Full automation: skill auto-load, obsidian sync, pattern detection | /delegado [bmad|hell|hell:phase-board|hell:bypass|propose|specs|design|tasks|apply|verify|context|memory|learn|feedback]"
+argument-hint: "[bmad|hell|hell:phase-board|hell:bypass|propose|specs|design|tasks|apply|verify|context|memory|learn|feedback]"
 allowed-tools:
   - Read
   - Write
@@ -116,6 +116,7 @@ RECEIVE → ANALYZE → DECIDE → EXECUTE → RECORD → SYNC → VALIDATE → 
 | `/delegado hell:debt` | Tech debt backlog |
 | `/delegado hell:status` | HELL dashboard (all phases) |
 | `/delegado hell:phase-board` | Complete review: phases, roadmap, tasks, specs, gaps, changelog |
+| `/dos-hell:bypass [task]` | 🤖 Agente autônomo completo — review, specs, phase-board, TDD, impl, tests, docs (all in one) |
 | `/delegado propose [nome]` | Create change proposal |
 | `/delegado specs` | Create/update specs |
 | `/delegado design` | Create technical design |
