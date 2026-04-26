@@ -488,6 +488,25 @@ reporting:
   verbose-output: true
 ```
 
+### Cross-Framework Invocation
+
+O agente Bypass pode invocar skills de qualquer framework instalado:
+
+| Framework | Como Invocar | Exemplo |
+|-----------|--------------|---------|
+| **HELL** | `Skill(dos-hell:tdd)` | TDD cycle |
+| **Superpowers** | `Skill(superpowers:brainstorming)` | Brainstorming |
+| **GSD** | `Skill(gsd-plan-phase)` | Planear phase |
+| **Delegado** | `Skill(delegado)` | Menu interativo |
+
+**Preferred-order** (definido em agent.yaml):
+1. `superpowers` — Capacidades especializadas
+2. `gsd` — GSD phases (workflow)
+3. `dos-hell` — HELL como centro
+4. `delegado` — Delegado OS
+
+**Fallback**: Se `Skill()` falhar (permission denied), usar execução direta com tools nativas.
+
 ---
 
 ## 🚀 Fluxo Completo de Execução
