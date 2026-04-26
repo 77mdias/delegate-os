@@ -56,7 +56,7 @@ docs/development/
 
 | Template | Location | Use |
 |----------|----------|-----|
-| phase-board | `templates/tasks/phase-board.template.md` | Phase/Sprint tracking |
+| phase-board | `templates/tasks/phase-board.template.md` | Phase/Sprint tracking (formato detalhado com tasks explícitas) |
 | sprint | `templates/tasks/sprint.template.md` | Sprint planning |
 | single-task | `templates/tasks/single-task.template.md` | Unit task |
 | hell-spec | `templates/hell/hell-spec.template.md` | HELL specification |
