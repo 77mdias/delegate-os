@@ -193,12 +193,15 @@ function main() {
         const skillsDir = join(homeDir, agent.dir);
         if (existsSync(skillsDir)) {
           if (agent.type === 'marketplace') {
-            // For marketplace, add to .skill-lock.json instead of symlink
+            // For marketplace, create flat symlinks: ~/.agents/skills/[skill-name]
             const skillPathInPackage = skill.path.replace(packagePath + '/', '');
-            const result = addToMarketplaceLock(skill.name, `${skillPathInPackage}/SKILL.md`);
+            const targetLink = join(skillsDir, skill.name);
+            const result = linkIfNotExists(skill.path, targetLink);
             if (result === 'linked') {
-              console.log(`  ✓ ${skill.name} (marketplace)`);
+              console.log(`  ✓ ${skill.name}`);
             }
+            // Also add to marketplace lock
+            addToMarketplaceLock(skill.name, `${skillPathInPackage}/SKILL.md`);
           } else {
             const targetLink = join(skillsDir, skill.name);
             const result = linkIfNotExists(skill.path, targetLink);
