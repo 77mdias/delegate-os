@@ -29,35 +29,6 @@ const info = (m) => console.log(`${C.c}[INFO]${C.reset} ${m}`);
 const warn = (m) => console.log(`${C.y}[WARN]${C.reset} ${m}`);
 const error = (m) => { console.error(`${C.r}[ERROR]${C.reset} ${m}`); process.exit(1); };
 
-//-------------------------------------------------------------------------------
-# Plugin System for Delegado OS
-
-Loads and manages plugins to extend Delegado OS functionality.
-
-Plugin Structure:
-  plugin/
-  ├── registry.json      # Installed plugins
-  ├── plugins/           # Plugin code
-  │   └── [plugin-name]/
-  │       ├── plugin.json
-  │       ├── index.js
-  │       └── skills/
-  └── templates/         # Plugin templates
-
-const fs = require('fs');
-const path = require('path');
-
-const ROOT = path.resolve(__dirname, '../..');
-const PLUGIN_DIR = path.join(ROOT, 'plugin');
-const REGISTRY = path.join(PLUGIN_DIR, 'registry.json');
-
-const C = { g: '\x1b[0;32m', r: '\x1b[0;31m', y: '\x1b[1;33m', c: '\x1b[0;36m', m: '\x1b[0;35m', bold: '\x1b[1m', reset: '\x1b[0m' };
-
-const log = (m) => console.log(\`\${C.g}[PLUGIN]\${C.reset} \${m}\`);
-const info = (m) => console.log(\`\${C.c}[INFO]\${C.reset} \${m}\`);
-const warn = (m) => console.log(\`\${C.y}[WARN]\${C.reset} \${m}\`);
-const err = (m) => { console.error(\`\${C.r}[ERROR]\${C.reset} \${m}\`); process.exit(1); };
-
 const readJSON = (f) => { try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch { return {}; } };
 const writeJSON = (f, d) => fs.writeFileSync(f, JSON.stringify(d, null, 2), 'utf8');
 
@@ -65,21 +36,21 @@ function ensurePluginDir() {
   const pluginsDir = path.join(PLUGIN_DIR, 'plugins');
   if (!fs.existsSync(pluginsDir)) {
     fs.mkdirSync(pluginsDir, { recursive: true });
-    info(\`Created: \${pluginsDir}\`);
+    info(`Created: ${pluginsDir}`);
   }
-  if (!fs.existsSync(REGISTRY)) {
-    writeJSON(REGISTRY, { version: '1.0.0', plugins: [] });
-    info(\`Created registry: \${REGISTRY}\`);
+  if (!fs.existsSync(REGISTRY_FILE)) {
+    writeJSON(REGISTRY_FILE, { version: '1.0.0', plugins: [] });
+    info(`Created registry: ${REGISTRY_FILE}`);
   }
 }
 
 function listPlugins() {
   ensurePluginDir();
-  const registry = readJSON(REGISTRY);
+  const registry = readJSON(REGISTRY_FILE);
   
-  console.log(\`\n\${C.bold}═══ DELEGADO PLUGINS ═══\${C.reset}\`);
-  console.log(\`Registry: \${REGISTRY}\`);
-  console.log(\`Total: \${registry.plugins.length}\`);
+  console.log(`\n${C.bold}═══ DELEGADO PLUGINS ═══${C.reset}`);
+  console.log(`Registry: ${REGISTRY_FILE}`);
+  console.log(`Total: ${registry.plugins.length}`);
   console.log('');
   
   if (registry.plugins.length === 0) {
@@ -91,25 +62,25 @@ function listPlugins() {
   }
   
   registry.plugins.forEach(p => {
-    const status = p.enabled ? \`\${C.g}enabled\${C.reset}\` : \`\${C.y}disabled\${C.reset}\`;
-    console.log(\`  \${C.c}\${p.name}\${C.reset} - \${p.description} [\${status}]\`);
-    console.log(\`    Version: \${p.version}\`);
-    console.log(\`    Path: \${p.path}\`);
+    const status = p.enabled ? `${C.g}enabled${C.reset}` : `${C.y}disabled${C.reset}`;
+    console.log(`  ${C.c}${p.name}${C.reset} - ${p.description} [${status}]`);
+    console.log(`    Version: ${p.version}`);
+    console.log(`    Path: ${p.path}`);
     console.log('');
   });
 }
 
 function loadPlugin(name) {
   ensurePluginDir();
-  const registry = readJSON(REGISTRY);
+  const registry = readJSON(REGISTRY_FILE);
   const plugin = registry.plugins.find(p => p.name === name);
   
   if (!plugin) {
-    err(\`Plugin not found: \${name}\`);
+    error(`Plugin not found: ${name}`);
   }
   
   if (!plugin.enabled) {
-    warn(\`Plugin disabled: \${name}\`);
+    warn(`Plugin disabled: ${name}`);
     return;
   }
   
@@ -117,116 +88,116 @@ function loadPlugin(name) {
   const indexFile = path.join(pluginPath, 'index.js');
   
   if (!fs.existsSync(indexFile)) {
-    err(\`Plugin entry point not found: \${indexFile}\`);
+    error(`Plugin entry point not found: ${indexFile}`);
   }
   
-  log(\`Loading plugin: \${name}\`);
+  log(`Loading plugin: ${name}`);
   
   try {
     const plugin = require(indexFile);
-    info(\`Plugin \${name} loaded successfully\`);
+    info(`Plugin ${name} loaded successfully`);
     
     if (plugin.activate) {
       plugin.activate();
     }
     
     if (plugin.commands) {
-      console.log(\`\\n\${C.bold}Commands provided by \${name}:\${C.reset}\`);
+      console.log(`\n${C.bold}Commands provided by ${name}:${C.reset}`);
       Object.entries(plugin.commands).forEach(([cmd, desc]) => {
-        console.log(\`  \${C.c}\${cmd}\${C.reset} - \${desc}\`);
+        console.log(`  ${C.c}${cmd}${C.reset} - ${desc}`);
       });
     }
     
     if (plugin.skills) {
-      console.log(\`\\n\${C.bold}Skills provided by \${name}:\${C.reset}\`);
+      console.log(`\n${C.bold}Skills provided by ${name}:${C.reset}`);
       plugin.skills.forEach(skill => {
-        console.log(\`  \${C.c}\${skill}\${C.reset}\`);
+        console.log(`  ${C.c}${skill}${C.reset}`);
       });
     }
     
   } catch (e) {
-    err(\`Failed to load plugin: \${e.message}\`);
+    error(`Failed to load plugin: ${e.message}`);
   }
 }
 
 function installPlugin(pkg) {
   ensurePluginDir();
   
-  log(\`Installing plugin: \${pkg}\`);
+  log(`Installing plugin: ${pkg}`);
   
   const pluginPath = path.join(PLUGIN_DIR, 'plugins', pkg);
   
   if (fs.existsSync(pluginPath)) {
-    warn(\`Plugin already exists: \${pkg}\`);
+    warn(`Plugin already exists: ${pkg}`);
     return;
   }
   
   // For npm packages
   if (pkg.startsWith('@')) {
-    info(\`Installing from npm: \${pkg}\`);
+    info(`Installing from npm: ${pkg}`);
     try {
-      execSync(\`npm install \${pkg}\`, { cwd: PLUGIN_DIR, stdio: 'inherit' });
+      execSync(`npm install ${pkg}`, { cwd: PLUGIN_DIR, stdio: 'inherit' });
     } catch {
-      err(\`Failed to install: \${pkg}\`);
+      error(`Failed to install: ${pkg}`);
     }
     return;
   }
   
   // For git repos
   if (pkg.includes('github.com') || pkg.includes('gitlab.com')) {
-    info(\`Cloning from git: \${pkg}\`);
+    info(`Cloning from git: ${pkg}`);
     try {
-      execSync(\`git clone \${pkg} \${pluginPath}\`, { stdio: 'inherit' });
+      execSync(`git clone ${pkg} ${pluginPath}`, { stdio: 'inherit' });
     } catch {
-      err(\`Failed to clone: \${pkg}\`);
+      error(`Failed to clone: ${pkg}`);
     }
     return;
   }
   
-  err(\`Unknown package format: \${pkg}\`);
+  error(`Unknown package format: ${pkg}`);
 }
 
 function uninstallPlugin(name) {
   ensurePluginDir();
-  const registry = readJSON(REGISTRY);
+  const registry = readJSON(REGISTRY_FILE);
   const idx = registry.plugins.findIndex(p => p.name === name);
   
   if (idx === -1) {
-    err(\`Plugin not found: \${name}\`);
+    error(`Plugin not found: ${name}`);
   }
   
   registry.plugins.splice(idx, 1);
-  writeJSON(REGISTRY, registry);
+  writeJSON(REGISTRY_FILE, registry);
   
   const pluginPath = path.join(PLUGIN_DIR, 'plugins', name);
   if (fs.existsSync(pluginPath)) {
     fs.rmSync(pluginPath, { recursive: true });
-    log(\`Removed plugin: \${name}\`);
+    log(`Removed plugin: ${name}`);
   }
 }
 
 function enablePlugin(name) {
   ensurePluginDir();
-  const registry = readJSON(REGISTRY);
+  const registry = readJSON(REGISTRY_FILE);
   const plugin = registry.plugins.find(p => p.name === name);
   
-  if (!plugin) err(\`Plugin not found: \${name}\`);
+  if (!plugin) error(`Plugin not found: ${name}`);
   
   plugin.enabled = true;
-  writeJSON(REGISTRY, registry);
-  log(\`Enabled plugin: \${name}\`);
+  writeJSON(REGISTRY_FILE, registry);
+  log(`Enabled plugin: ${name}`);
 }
 
 function disablePlugin(name) {
   ensurePluginDir();
-  const registry = readJSON(REGISTRY);
+  const registry = readJSON(REGISTRY_FILE);
   const plugin = registry.plugins.find(p => p.name === name);
   
-  if (!plugin) err(\`Plugin not found: \${name}\`);
+  if (!plugin) error(`Plugin not found: ${name}`);
   
   plugin.enabled = false;
-  writeJSON(REGISTRY, registry);
-  log(\`Disabled plugin: \${name}\`);
+  writeJSON(REGISTRY_FILE, registry);
+  log(`Disabled plugin: ${name}`);
 }
 
 function createPlugin(name) {
@@ -235,7 +206,7 @@ function createPlugin(name) {
   const pluginPath = path.join(PLUGIN_DIR, 'plugins', name);
   
   if (fs.existsSync(pluginPath)) {
-    err(\`Plugin already exists: \${name}\`);
+    error(`Plugin already exists: ${name}`);
   }
   
   fs.mkdirSync(pluginPath, { recursive: true });
@@ -245,7 +216,7 @@ function createPlugin(name) {
   const pluginJson = {
     name,
     version: '1.0.0',
-    description: \`\${name} plugin for Delegado OS\`,
+    description: `${name} plugin for Delegado OS`,
     author: 'Delegado OS',
     HellPhase: null,
     commands: {},
@@ -259,36 +230,36 @@ function createPlugin(name) {
   );
   
   // Create index.js
-  const indexJs = \`/**
- * \${name} Plugin for Delegado OS
+  const indexJs = `/**
+ * ${name} Plugin for Delegado OS
  */
 
 module.exports = {
-  name: '\${name}',
+  name: '${name}',
   version: '1.0.0',
   
   activate() {
-    console.log('[\${name}] Plugin activated');
+    console.log('[${name}] Plugin activated');
   },
   
   commands: {
     // Add commands here
-    // '\${name}:do-something': 'Do something',
+    // '${name}:do-something': 'Do something',
   },
   
   skills: [
     // Add skills here
-    // '\${name}/SKILL-NAME',
+    // '${name}/SKILL-NAME',
   ]
 };
-\`;
+`;
   
   fs.writeFileSync(path.join(pluginPath, 'index.js'), indexJs, 'utf8');
   
   // Create SKILL.md template
-  const skillMd = \`# \${name} SKILL
+  const skillMd = `# ${name} SKILL
 
-> Plugin skill for \${name}
+Plugin skill for ${name}
 
 ## Description
 
@@ -300,25 +271,25 @@ Describe how to use this skill.
 
 ## Triggers
 
-- 
+-
 `;
-
+  
   fs.writeFileSync(path.join(pluginPath, 'skills', 'SKILL.md'), skillMd, 'utf8');
   
   // Register plugin
-  const registry = readJSON(REGISTRY);
+  const registry = readJSON(REGISTRY_FILE);
   registry.plugins.push({
     name,
     version: '1.0.0',
-    description: \`\${name} plugin\`,
+    description: `${name} plugin`,
     path: pluginPath,
     enabled: true,
     installed: new Date().toISOString()
   });
-  writeJSON(REGISTRY, registry);
+  writeJSON(REGISTRY_FILE, registry);
   
-  log(\`Created plugin: \${name}\`);
-  log(\`Path: \${pluginPath}\`);
+  log(`Created plugin: ${name}`);
+  log(`Path: ${pluginPath}`);
 }
 
 function initPluginSystem() {
@@ -329,7 +300,7 @@ function initPluginSystem() {
     fs.mkdirSync(templatesDir, { recursive: true });
     
     // Create template
-    const template = \`# Plugin Template
+    const template = `# Plugin Template
 
 ## Structure
 
@@ -368,7 +339,7 @@ module.exports = {
   skills: []
 };
 \`\`\`
-\`;
+`;
     
     fs.writeFileSync(path.join(templatesDir, 'README.md'), template, 'utf8');
   }
@@ -387,31 +358,31 @@ switch (cmd) {
     listPlugins();
     break;
   case 'load':
-    if (!arg1) err('Plugin name required');
+    if (!arg1) error('Plugin name required');
     loadPlugin(arg1);
     break;
   case 'install':
-    if (!arg1) err('Package required');
+    if (!arg1) error('Package required');
     installPlugin(arg1);
     break;
   case 'uninstall':
-    if (!arg1) err('Plugin name required');
+    if (!arg1) error('Plugin name required');
     uninstallPlugin(arg1);
     break;
   case 'enable':
-    if (!arg1) err('Plugin name required');
+    if (!arg1) error('Plugin name required');
     enablePlugin(arg1);
     break;
   case 'disable':
-    if (!arg1) err('Plugin name required');
+    if (!arg1) error('Plugin name required');
     disablePlugin(arg1);
     break;
   case 'create':
-    if (!arg1) err('Plugin name required');
+    if (!arg1) error('Plugin name required');
     createPlugin(arg1);
     break;
   default:
-    console.log(\`
+    console.log(`
   Delegado OS Plugin System
 
   Usage:
@@ -428,5 +399,5 @@ switch (cmd) {
     node plugin-loader.js list
     node plugin-loader.js install @delegado/my-plugin
     node plugin-loader.js create my-plugin
-\`);
+`);
 }

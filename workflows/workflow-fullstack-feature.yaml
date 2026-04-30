@@ -1,0 +1,121 @@
+name: Full-Stack Feature Workflow
+description: Complete workflow from research to deployment
+
+modes:
+  - RESEARCHER     # Tech stack research
+  - ARCHITECT      # System design
+  - GUARDIAN       # Security review
+  - PROFESSOR      # Team onboarding
+  - CODER          # Implementation
+  - DEBUGGER       # Testing
+  - REVIEW         # Code review
+  - ORCHESTRATION  # Coordination
+
+trigger:
+  keywords: ["feature", "new service", "full-stack", "implement"]
+  complexity: high
+
+phases:
+  phase_1_discovery:
+    mode: RESEARCHER
+    tasks:
+      - Analyze requirements
+      - Research technology options
+      - Evaluate libraries and frameworks
+      - Check community support
+      - Benchmark alternatives
+    output: Technology recommendation report
+
+  phase_2_architecture:
+    mode: ARCHITECT
+    tasks:
+      - Design system architecture
+      - Define API contracts
+      - Plan data models
+      - Design for scalability
+      - Document decisions (ADRs)
+    output: Architecture Design Document
+    gate: At least 2 architecture options compared
+
+  phase_3_security:
+    mode: GUARDIAN
+    tasks:
+      - Threat modeling
+      - OWASP review
+      - Data classification
+      - Compliance requirements
+      - Security patterns
+    output: Security Architecture Document
+    gate: No critical security gaps
+
+  phase_4_onboarding:
+    mode: PROFESSOR
+    tasks:
+      - Create feature documentation
+      - Write onboarding guide
+      - Prepare code examples
+      - Document patterns to follow
+      - Setup walkthrough
+    output: Team-ready documentation
+    parallel: true  # Runs alongside development
+
+  phase_5_implementation:
+    mode: CODER
+    tasks:
+      - Setup project structure
+      - Implement backend APIs
+      - Implement frontend components
+      - Write unit tests
+      - Setup CI/CD
+    output: Working code with tests
+    gate: All tests passing
+
+  phase_6_testing:
+    mode: DEBUGGER
+    tasks:
+      - Integration testing
+      - Performance testing
+      - Security testing
+      - End-to-end scenarios
+      - Regression testing
+    output: Test results and coverage report
+    gate: >80% code coverage
+
+  phase_7_review:
+    mode: REVIEW
+    tasks:
+      - Code quality review
+      - Security review
+      - Performance review
+      - Documentation review
+      - Final approval
+    output: Approved code
+    gate: No blocking issues
+
+  phase_8_deployment:
+    mode: CODER
+    tasks:
+      - Deploy to staging
+      - Verify deployment
+      - Deploy to production
+      - Monitor initial traffic
+    output: Live in production
+
+output:
+  - Technology report (Obsidian)
+  - Architecture document (Obsidian)
+  - Security assessment (Obsidian)
+  - Feature documentation (Obsidian)
+  - Source code
+  - Deployed application
+
+obsidian_sync:
+  research: 00-RESEARCHER/features/
+  architecture: 00-ARCHITECT/features/
+  security: 00-GUARDIAN/reviews/
+  documentation: 00-PROFESSOR/features/
+
+estimated_duration:
+  small: 1-2 weeks
+  medium: 2-4 weeks
+  large: 1-2 months

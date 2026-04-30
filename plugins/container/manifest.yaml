@@ -1,0 +1,22 @@
+name: container
+version: 1.0.0
+type: plugin
+description: Container support for Delegado OS (Docker, Podman)
+author: Delegado OS Team
+
+hooks:
+  pre_container_start:
+    script: hooks/pre_container_start.sh
+  post_container_stop:
+    script: hooks/post_container_stop.sh
+  on_container_create:
+    script: hooks/on_container_create.sh
+
+config:
+  enabled: true
+  default_runtime: docker
+  image: delegado-os:latest
+  network_mode: bridge
+  volume_mounts:
+    - ~/.delegado:/root/.delegado
+    - ~/obsidian-vault:/root/obsidian-vault

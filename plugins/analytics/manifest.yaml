@@ -1,0 +1,26 @@
+name: analytics
+version: 1.0.0
+type: plugin
+description: Analytics and insights for Delegado OS usage patterns
+author: Delegado OS Team
+
+hooks:
+  daily:
+    script: hooks/daily_report.sh
+  weekly:
+    script: hooks/weekly_report.sh
+  monthly:
+    script: hooks/monthly_report.sh
+
+config:
+  enabled: true
+  retention_days: 90
+  report_formats:
+    - markdown
+    - json
+  dashboard_enabled: true
+  metrics:
+    - mode_usage
+    - session_duration
+    - token_usage
+    - task_completion

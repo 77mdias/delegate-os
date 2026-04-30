@@ -1,0 +1,9 @@
+{
+  "name": "plugin-template",
+  "version": "1.0.0",
+  "description": "Template for creating Delegado OS plugins",
+  "author": "Delegado OS",
+  "delegado_version": ">=1.0.0",
+  "hooks": [],
+  "modes": []
+}

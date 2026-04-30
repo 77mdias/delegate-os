@@ -1,0 +1,66 @@
+name: logging
+version: 1.0.0
+type: plugin
+description: Centralized logging plugin for all Delegado OS agent activities
+author: Delegado OS Team
+license: MIT
+
+hooks:
+  on_agent_start:
+    script: hooks/on_agent_start.sh
+  on_agent_end:
+    script: hooks/on_agent_end.sh
+  on_agent_error:
+    script: hooks/on_agent_error.sh
+  on_tool_call:
+    script: hooks/on_tool_call.sh
+  on_task_start:
+    script: hooks/on_task_start.sh
+  on_task_complete:
+    script: hooks/on_task_complete.sh
+  on_task_fail:
+    script: hooks/on_task_fail.sh
+
+config:
+  enabled: true
+  log_dir: ~/.delegado/logs
+  log_level: info
+  log_levels:
+    - debug
+    - info
+    - warn
+    - error
+  rotation:
+    enabled: true
+    max_size_mb: 100
+    max_files: 10
+    max_age_days: 30
+  formats:
+    default: "[{timestamp}] {level} | {source} | {message}"
+    detailed: "[{timestamp}] {level} | {source} | {pid} | {message}"
+    json: '{"timestamp":"{timestamp}","level":"{level}","source":"{source}","message":"{message}"}'
+  outputs:
+    - type: file
+      path: ~/.delegado/logs/agent.log
+      min_level: debug
+    - type: file
+      path: ~/.delegado/logs/error.log
+      min_level: error
+    - type: file
+      path: ~/.delegado/logs/activity.log
+      min_level: info
+  filters:
+    exclude_patterns:
+      - "^heartbeat.*"
+      - "^ping.*"
+    include_only:
+      - agent.*
+      - task.*
+      - tool.*
+  aggregation:
+    enabled: true
+    flush_interval_seconds: 60
+  alerting:
+    error_threshold: 10
+    error_window_minutes: 5
+    notification_webhook: ""

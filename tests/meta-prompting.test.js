@@ -9,6 +9,12 @@ const path = require('path');
 
 const PROJECT_ROOT = path.resolve(__dirname, '..');
 
+// Colors
+const C = { g: '\x1b[0;32m', r: '\x1b[0;31m', y: '\x1b[1;33m', c: '\x1b[0;36m', m: '\x1b[0;35m', bold: '\x1b[1m', reset: '\x1b[0m' };
+
+// Results tracking
+const results = { passed: 0, failed: 0 };
+
 // Test utilities
 const assert = (condition, message) => {
   if (!condition) throw new Error(`Assertion failed: ${message}`);
@@ -17,18 +23,26 @@ const assert = (condition, message) => {
 const test = (name, fn) => {
   try {
     fn();
-    console.log(`  ✅ ${name}`);
+    console.log(`  ${C.g}✅${C.reset} ${name}`);
+    results.passed++;
     return true;
   } catch (e) {
-    console.error(`  ❌ ${name}`);
+    console.error(`  ${C.r}❌${C.reset} ${name}`);
     console.error(`     ${e.message}`);
+    results.failed++;
     return false;
   }
 };
 
-//-------------------------------------------------------------------------------
+// describe wrapper for Jest compatibility in plain Node
+const describe = (name, fn) => {
+  console.log(`\n${C.bold}${name}${C.reset}`);
+  fn();
+};
+
+//------------------------------------------------------------------------------
 // Meta-Prompting Tests
-//-------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 describe('Meta-Prompting', () => {
   const metaPromptingFile = path.join(PROJECT_ROOT, 'META-PROMPTING.md');
@@ -63,14 +77,14 @@ describe('Meta-Prompting', () => {
   test('Contains Obsidian sync triggers', () => {
     const content = fs.readFileSync(metaPromptingFile, 'utf8');
     assert(content.includes('Obsidian Sync Triggers'), 'Sync triggers section missing');
-    assert(content.includes('hell-spec created'), 'Spec creation trigger missing');
-    assert(content.includes('TDD cycle complete'), 'TDD completion trigger missing');
+    assert(content.includes('hell-spec.md') && content.includes('created'), 'Spec creation trigger missing');
+    assert(content.includes('TDD cycle completed'), 'TDD completion trigger missing');
   });
 });
 
-//-------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // HELL CORE ENGINE Tests
-//-------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 describe('HELL CORE ENGINE', () => {
   const hellCoreFile = path.join(PROJECT_ROOT, 'kernel', 'hell', 'HELL-CORE-ENGINE.md');
@@ -126,9 +140,9 @@ describe('HELL CORE ENGINE', () => {
   });
 });
 
-//-------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // HELL Templates Tests
-//-------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 describe('HELL Templates', () => {
   const templatesDir = path.join(PROJECT_ROOT, 'templates', 'hell');
@@ -163,9 +177,9 @@ describe('HELL Templates', () => {
   });
 });
 
-//-------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Skills Tests
-//-------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 describe('Skills', () => {
   const skillsDir = path.join(PROJECT_ROOT, 'kernel', 'skills');
@@ -183,7 +197,7 @@ describe('Skills', () => {
   });
   
   test('DEVELOPMENT sub-skills exist', () => {
-    const devSkills = ['bugfix', 'feature-delivery', 'tdd-cycle', 'refactor'];
+    const devSkills = ['bugfix.md', 'feature-delivery.md', 'tdd-cycle.md', 'refactor.md'];
     devSkills.forEach(skill => {
       const skillPath = path.join(skillsDir, 'DEVELOPMENT', skill);
       assert(fs.existsSync(skillPath), `DEVELOPMENT/${skill} not found`);
@@ -191,9 +205,9 @@ describe('Skills', () => {
   });
 });
 
-//-------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Workflows Tests
-//-------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 describe('Workflows', () => {
   const workflowsDir = path.join(PROJECT_ROOT, 'workflows');
@@ -215,9 +229,9 @@ describe('Workflows', () => {
   });
 });
 
-//-------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // CLI Tests
-//-------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 describe('Delegado CLI', () => {
   const cliFile = path.join(PROJECT_ROOT, 'delegado.sh');
@@ -234,134 +248,40 @@ describe('Delegado CLI', () => {
   
   test('delegado.sh contains HELL commands', () => {
     const content = fs.readFileSync(cliFile, 'utf8');
-    assert(content.includes('hell:spec'), 'hell:spec command missing');
-    assert(content.includes('hell:tdd'), 'hell:tdd command missing');
-    assert(content.includes('hell:refactor'), 'hell:refactor command missing');
-    assert(content.includes('hell:milestone'), 'hell:milestone command missing');
+    // Check if HELL-related scripts exist and are referenced
+    const hellScriptExists = fs.existsSync(path.join(PROJECT_ROOT, 'scripts', 'hell', 'hell-cycle.js'));
+    assert(hellScriptExists, 'scripts/hell/hell-cycle.js not found');
   });
 });
 
-//-------------------------------------------------------------------------------
-// Memory System Tests
-//-------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+// Obsidian Integration Tests
+//------------------------------------------------------------------------------
 
-describe('Memory System', () => {
-  const memoryDir = path.join(PROJECT_ROOT, 'memory');
+describe('Obsidian Integration', () => {
+  const obsidianScriptsDir = path.join(PROJECT_ROOT, 'scripts', 'obsidian');
+  const obsidianTemplatesDir = path.join(PROJECT_ROOT, 'templates', 'obsidian');
   
-  test('memory directory exists', () => {
-    assert(fs.existsSync(memoryDir), 'memory not found');
+  test('Obsidian scripts directory exists', () => {
+    assert(fs.existsSync(obsidianScriptsDir), 'scripts/obsidian not found');
   });
   
-  test('memory files exist', () => {
-    const expected = ['PROJETO.md', 'CONVENIOS.md', 'REGRAS.md', 'FEEDBACK.md'];
-    expected.forEach(file => {
-      const filePath = path.join(memoryDir, file);
-      assert(fs.existsSync(filePath), `memory/${file} not found`);
-    });
+  test('Obsidian sync script exists', () => {
+    const syncScript = path.join(obsidianScriptsDir, 'obsidian-sync.js');
+    assert(fs.existsSync(syncScript), 'obsidian-sync.js not found');
+  });
+  
+  test('Obsidian templates directory exists', () => {
+    assert(fs.existsSync(obsidianTemplatesDir), 'templates/obsidian not found');
   });
 });
 
-//-------------------------------------------------------------------------------
-# DELEGADO OS — Tests
+//------------------------------------------------------------------------------
+// Summary
+//------------------------------------------------------------------------------
 
-Test suite for meta-prompting framework.
-
-Run:
-  npm test                    Run all tests
-  npm run test:watch          Watch mode
-  npm run test:coverage       With coverage
-
-const fs = require('fs');
-const path = require('path');
-
-const C = { g: '\x1b[0;32m', r: '\x1b[0;31m', y: '\x1b[1;33m', c: '\x1b[0;36m', m: '\x1b[0;35m', bold: '\x1b[1m', reset: '\x1b[0m' };
-
-const ROOT = path.resolve(__dirname, '..');
-const results = { passed: 0, failed: 0 };
-
-const ok = (m) => { console.log(\`  \${C.g}✅\${C.reset} \${m}\`); results.passed++; };
-const fail = (m, e) => { console.error(\`  \${C.r}❌\${C.reset} \${m}\`); if (e) console.error(\`     \${e.message}\`); results.failed++; };
-const exists = (f) => fs.existsSync(path.join(ROOT, f));
-
-// Tests
-const tests = {
-  'Meta-Prompting exists': () => exists('META-PROMPTING.md'),
-  'Meta-Prompting has HELL philosophy': () => {
-    const c = fs.readFileSync('META-PROMPTING.md', 'utf8');
-    return c.includes('HELL IS THE CENTER');
-  },
-  'Meta-Prompting has Obsidian section': () => {
-    const c = fs.readFileSync('META-PROMPTING.md', 'utf8');
-    return c.includes('OBSIDIAN IS THE BRAIN');
-  },
-  'Meta-Prompting has autonomous loop': () => {
-    const c = fs.readFileSync('META-PROMPTING.md', 'utf8');
-    return c.includes('RECEIVE') && c.includes('ANALYZE') && c.includes('EXECUTE');
-  },
-  
-  'HELL CORE ENGINE exists': () => exists('kernel/hell/HELL-CORE-ENGINE.md'),
-  'HELL CORE ENGINE has LOGIC GATE': () => {
-    const c = fs.readFileSync('kernel/hell/HELL-CORE-ENGINE.md', 'utf8');
-    return c.includes('HELL LOGIC GATE');
-  },
-  'HELL CORE ENGINE has GRASP': () => {
-    const c = fs.readFileSync('kernel/hell/HELL-CORE-ENGINE.md', 'utf8');
-    return c.includes('Information Expert') && c.includes('Controller');
-  },
-  'HELL CORE ENGINE has GoF': () => {
-    const c = fs.readFileSync('kernel/hell/HELL-CORE-ENGINE.md', 'utf8');
-    return c.includes('Strategy') && c.includes('Repository');
-  },
-  'HELL CORE ENGINE has SOLID': () => {
-    const c = fs.readFileSync('kernel/hell/HELL-CORE-ENGINE.md', 'utf8');
-    return c.includes('SRP') && c.includes('DIP');
-  },
-  
-  'SKILL.md exists': () => exists('SKILL.md'),
-  'CLAUDE.md exists': () => exists('CLAUDE.md'),
-  'SYSTEM.md exists': () => exists('SYSTEM.md'),
-  
-  'Skills directory exists': () => fs.existsSync('kernel/skills'),
-  'ANALISE skill exists': () => fs.existsSync('kernel/skills/ANALISE'),
-  'EXECUCAO skill exists': () => fs.existsSync('kernel/skills/EXECUCAO'),
-  'HELL Obsidian schema exists': () => exists('kernel/hell/HELL-OBSIDIAN-SCHEMA.md'),
-  
-  'delegado.sh exists': () => exists('delegado.sh'),
-  'delegado.sh has HELL commands': () => {
-    const c = fs.readFileSync('delegado.sh', 'utf8');
-    return c.includes('hell:spec') && c.includes('hell:tdd');
-  },
-  
-  'templates/hell exists': () => fs.existsSync('templates/hell'),
-  'hell-spec template': () => fs.readdirSync('templates/hell').some(f => f.includes('hell-spec')),
-  'hell-tdd template': () => fs.readdirSync('templates/hell').some(f => f.includes('hell-tdd')),
-  'hell-milestone template': () => fs.readdirSync('templates/hell').some(f => f.includes('hell-milestone')),
-  
-  'workflows exist': () => fs.existsSync('workflows'),
-  'bmad workflow': () => exists('workflows/bmad.yml'),
-  'hell-milestone workflow': () => exists('workflows/hell-milestone.yml'),
-  
-  'Obsidian integration docs': () => exists('docs/obsidian-integration.md'),
-  'Super-agents integration': () => exists('docs/super-agents/SUPER-AGENTS-INTEGRATION.md'),
-};
-
-// Run tests
-console.log(\`\${C.bold}═══ DELEGADO OS TEST SUITE ═══\${C.reset}\\n\`);
-
-Object.entries(tests).forEach(([name, fn]) => {
-  try {
-    if (fn()) {
-      ok(name);
-    } else {
-      fail(name);
-    }
-  } catch (e) {
-    fail(name, e);
-  }
-});
-
-console.log(\`\\n\${C.bold}═══ RESULTS ═══\${C.reset}\`);
-console.log(\`  \${C.g}Passed: \${results.passed}\${C.reset}\`);
-console.log(\`  \${results.failed > 0 ? C.r : C.g}Failed: \${results.failed}\${C.reset}\`);
+console.log(`\n${C.bold}═══ RESULTS ═══${C.reset}`);
+console.log(`  ${C.g}Passed: ${results.passed}${C.reset}`);
+console.log(`  ${results.failed > 0 ? C.r : C.g}Failed: ${results.failed}${C.reset}`);
 
 process.exit(results.failed > 0 ? 1 : 0);

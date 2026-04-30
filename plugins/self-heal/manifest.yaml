@@ -1,0 +1,20 @@
+name: self-heal
+version: 1.0.0
+type: plugin
+description: Automatic issue detection and self-healing for Delegado OS
+author: Delegado OS Team
+
+hooks:
+  daily:
+    script: hooks/daily_check.sh
+  on_error:
+    script: hooks/heal.sh
+
+config:
+  enabled: true
+  auto_repair:
+    - hook_permissions
+    - session_cleanup
+    - context_reset
+  alert_on_failure: true
+  max_retries: 3

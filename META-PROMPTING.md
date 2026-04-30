@@ -576,7 +576,242 @@ The CLI Agent should show command suggestions when:
 *This is the intelligence layer. HELL is the center. Obsidian is the brain. Automation is the key.*
 ---
 
-## 13. SUPER-AGENT ORCHESTRATION
+## 13. AGENT MODES SYSTEM
+
+Delegado OS includes 7 specialized agent modes for different contexts:
+
+### Mode Overview
+
+| Mode | Trigger Keywords | Obsidian Vault | Primary Use |
+|------|------------------|-----------------|-------------|
+| **PROFESSOR** 👨‍🏫 | ensinar, aprender, tutorial, como funciona | `vault/10-EDUCATION/` | Teaching & documentation |
+| **ARCHITECT** 🏛️ | arquitetura, pattern, design, grasp, gof | `vault/20-ARCHITECTURE/` | System design |
+| **DEBUGGER** 🐛 | bug, erro, falha, crash, não funciona | `vault/30-BUGS/` | Root cause analysis |
+| **GUARDIAN** 🛡️ | segurança, vulnerabilidade, auth, inject | `vault/40-SECURITY/` | Security audits |
+| **RESEARCHER** 📡 | biblioteca, package, comparar, alternativa | `vault/50-RESEARCH/` | Tech research |
+| **MENTOR** 🌱 | carreira, crescer, senior, promoção | `vault/60-CAREER/` | Career development |
+| **CONSULTANT** 💼 | consultar, sugestão, melhor prática | `vault/70-CONSULTING/` | Strategic advice |
+
+### Mode Selection Flow
+
+```
+USER INPUT
+    │
+    ▼
+CONTEXT SCANNER → Extract: Keywords, Stack, Intent, Complexity
+    │
+    ▼
+MODE MATCHER → Score each mode (0.0 - 1.0)
+    │
+    ▼
+MODE RESOLVER → If ambiguous → Ask user | If clear → Activate mode
+    │
+    ▼
+MODE ACTIVATOR → Load SKILL.md + Context + Execute + Sync Obsidian
+```
+
+### Mode Commands
+
+```bash
+/delegado professor [topic]     # Teach a topic
+/delegado architect [module]     # Design architecture
+/delegado debugger analyze       # Analyze bug
+/delegado guardian audit [scope] # Security audit
+/delegado researcher compare     # Compare packages
+/delegado mentor path [goal]     # Career path
+/delegado consultant advise     # Strategic advice
+/delegado modes                  # List all modes
+```
+
+→ Full documentation: `AGENT-MODES.md`
+
+---
+
+## 15. ADVANCED PROMPT ENGINEERING
+
+Delegado OS incorporates state-of-the-art prompting techniques:
+
+### 15.1 Chain-of-Thought (CoT) Prompting
+
+```yaml
+# Activated when: Complex reasoning, multi-step problems
+# Mechanism: Agent shows reasoning steps before final answer
+
+Trigger: "let's think step by step", "reasoning", "analysis"
+
+Template:
+"""
+Question: {problem}
+
+Let's think step by step:
+1. [First reasoning step]
+2. [Second reasoning step]
+3. [Continue until solution]
+
+Answer: [Final answer]
+"""
+
+# Agent Internal Format:
+THOUGHT: I need to... [Reasoning]
+ACTION: [Tool/API call]
+OBSERVATION: [Result]
+THOUGHT: Based on observation... [Next reasoning]
+...repeat until complete...
+FINAL_ANSWER: [Conclusion]
+```
+
+### 15.2 Tree of Thoughts (ToT)
+
+```yaml
+# Activated when: Complex decisions with multiple paths
+# Mechanism: Explore parallel reasoning branches
+
+Template:
+"""
+Imagine three experts exploring different paths:
+
+EXPERT 1 (Path A):
+- Step: [Reasoning path A]
+- Evaluation: [Pros/Cons]
+- Confidence: [0-100%]
+
+EXPERT 2 (Path B):
+- Step: [Reasoning path B]
+- Evaluation: [Pros/Cons]
+- Confidence: [0-100%]
+
+EXPERT 3 (Path C):
+- Step: [Reasoning path C]
+- Evaluation: [Pros/Cons]
+- Confidence: [0-100%]
+
+CONVERGENCE: [Which path wins or combination]
+"""
+```
+
+### 15.3 ReAct (Reasoning + Acting)
+
+```yaml
+# Activated when: Need external information + reasoning
+# Mechanism: Think → Act → Observe → Repeat
+
+Agent Loop:
+THOUGHT: What I need to figure out...
+ACTION: [tool_name]
+ACTION_INPUT: {parameters}
+OBSERVATION: [result]
+THOUGHT: Based on observation... [Continue or conclude]
+
+# Tools in ReAct:
+- Search: Web search for facts
+- Calculator: Math operations
+- CodeRunner: Execute code
+- FileReader: Read files
+- Memory: Access context/memory
+```
+
+### 15.4 Self-Consistency (Ensemble Reasoning)
+
+```yaml
+# Activated when: Need high confidence answers
+# Mechanism: Multiple reasoning paths, vote on consensus
+
+Template:
+"""
+Solve this problem in multiple ways:
+
+Path 1: [Reasoning method A]
+→ Answer: [A1]
+
+Path 2: [Reasoning method B]
+→ Answer: [A2]
+
+Path 3: [Reasoning method C]
+→ Answer: [A3]
+
+CONSENSUS: Most common answer is [X]
+CONFIDENCE: [Count agreeing] / [Total paths]
+"""
+```
+
+### 15.5 Prompt Chaining
+
+```yaml
+# Activated when: Multi-stage tasks
+# Mechanism: Output of one step becomes input of next
+
+STAGE 1: Extract
+Output: Structured data from input
+
+STAGE 2: Transform
+Input: STAGE 1 output
+Output: Processed/filtered data
+
+STAGE 3: Generate
+Input: STAGE 2 output
+Output: Final deliverable
+
+# Each stage is a separate agent or prompt
+```
+
+### 15.6 Few-Shot with Examples
+
+```yaml
+# Activated when: Teaching new patterns/tasks
+# Mechanism: Provide 2-5 examples of desired behavior
+
+Template:
+"""
+Example 1:
+Input: {example_input_1}
+Output: {example_output_1}
+
+Example 2:
+Input: {example_input_2}
+Output: {example_output_2}
+
+Example 3:
+Input: {example_input_3}
+Output: {example_output_3}
+
+Now solve:
+Input: {new_input}
+Output: [Apply pattern from examples]
+"""
+```
+
+### 15.7 Mode-Specific Prompt Activation
+
+| Situation | Technique | Activation |
+|-----------|-----------|------------|
+| Bug debugging | ReAct | "Let's debug this step by step" |
+| Teaching concept | Chain-of-Thought + Few-Shot | "Let me explain by showing" |
+| Design decisions | Tree of Thoughts | "Consider multiple approaches" |
+| Code generation | Few-Shot + Chain | "Here's a similar example" |
+| Research | ReAct + Self-Consistency | "Search and verify" |
+| Security audit | ReAct | "Think like an attacker" |
+
+### 15.8 Meta-Prompt Injection
+
+```yaml
+# Self-improving prompts embedded in agent output
+
+OUTPUT_PREFIX: |
+  [AGENT OUTPUT]
+  
+  ---
+  SELF-EVALUATION:
+  - Clarity: [1-5] [Optional improvement]
+  - Completeness: [1-5] [Optional improvement]
+  - Correctness: [1-5] [Optional improvement]
+  
+  REFINED_PROMPT_FOR_NEXT: |
+    [If score < 5, here's an improved prompt]
+```
+
+---
+
+## 16. SUPER-AGENT ORCHESTRATION
 
 For multi-agent systems (OpenClaw Noir, Hermes, Claude Code, Codex):
 
@@ -585,6 +820,7 @@ For multi-agent systems (OpenClaw Noir, Hermes, Claude Code, Codex):
 | Role | Responsibility |
 |------|----------------|
 | Context Owner | Maintains shared context, delegates tasks |
+| Mode Orchestrator | Routes to appropriate agent mode |
 | HELL Orchestrator | Routes HELL phases to appropriate agents |
 | Memory Authority | Updates MEMORY.md and Obsidian vault |
 | Quality Gate | Validates milestone completion |
@@ -592,7 +828,16 @@ For multi-agent systems (OpenClaw Noir, Hermes, Claude Code, Codex):
 ### Sub-Agent Spawning Pattern
 
 ```yaml
-Spawn for HELL Phase:
+For Agent Modes:
+  PROFESSOR  → Spawn: Teaching sub-agent
+  ARCHITECT  → Spawn: Design sub-agent
+  DEBUGGER   → Spawn: Analysis sub-agent
+  GUARDIAN   → Spawn: Security sub-agent
+  RESEARCHER → Spawn: Research sub-agent
+  MENTOR     → Spawn: Career sub-agent
+  CONSULTANT → Spawn: Advisory sub-agent
+
+For HELL Phase:
   SPEC     → Spawn: Analyst Agent
   TDD      → Spawn: Coder Agent
   REFACTOR → Spawn: Review Agent
@@ -607,12 +852,27 @@ Event_Bus_Topics:
   - hell.phase.started     # Phase began
   - hell.phase.completed   # Phase finished
   - hell.gate.passed       # Milestone achieved
+  - mode.activated          # Agent mode activated
+  - mode.completed          # Agent mode finished
   - memory.updated          # Memory changed
   - task.delegated         # Work assigned
   - context.changed         # Project context updated
 ```
 
+### Mode Orchestrator (Automatic Selection)
+
+```bash
+# Auto-detect mode from input
+./scripts/mode_selector.sh "me ensina TDD"
+# Output: Detected Mode: PROFESSOR
+
+# With Context7 integration
+./scripts/context7_search.sh "flutter state management" --lang=flutter
+```
+
 → Full protocol: `docs/super-agents/SUPER-AGENTS-INTEGRATION.md`
+→ Mode orchestrator: `MODE-ORCHESTRATOR.md`
+→ Hooks system: `scripts/hooks.sh`
 
 ---
 
