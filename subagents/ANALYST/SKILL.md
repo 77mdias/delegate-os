@@ -3,6 +3,7 @@ Agent:
   type: specialist
   hell_phase: SPEC
   role: Requirements extraction + GRASP domain modeling
+  description: Specializes in requirements extraction, GRASP domain modeling, and creating technical specifications following the HELL method
   skills:
     - ANALISE
     - PLANEJAMENTO

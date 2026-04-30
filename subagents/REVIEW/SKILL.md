@@ -3,6 +3,7 @@ Agent:
   type: specialist
   hell_phase: REFACTOR + REVIEW
   role: GRASP/SOLID audit, GoF pattern application, deep review
+  description: Specializes in code smell detection, GRASP/SOLID audits, GoF pattern application, and deep code review
   skills:
     - QUALIDADE
     - DEVELOPMENT/refactor

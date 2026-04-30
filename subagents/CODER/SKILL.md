@@ -3,6 +3,7 @@ Agent:
   type: specialist
   hell_phase: TDD
   role: TDD cycle execution, Red/Green/Refactor, GoF implementation
+  description: Specializes in TDD cycle execution with Red/Green/Refactor pattern and GoF design pattern implementation
   skills:
     - EXECUCAO
     - QUALIDADE

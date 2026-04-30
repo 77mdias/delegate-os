@@ -3,6 +3,7 @@ Agent:
   type: specialist
   hell_phase: EVOLVE
   role: CI/CD automation, tech debt tracking, deployment, monitoring
+  description: Specializes in CI/CD automation, tech debt tracking, deployment pipelines, and monitoring/observability
   skills:
     - EXECUCAO
   triggers:
